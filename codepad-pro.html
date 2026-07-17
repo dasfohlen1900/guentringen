@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodePad Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
+
+<style>
+:root {
+  --bg0:       #0d0f13;
+  --bg1:       #13161c;
+  --bg2:       #1a1e27;
+  --bg3:       #222631;
+  --border:    #2c3244;
+  --text:      #c9d1e0;
+  --text-dim:  #5a6480;
+  --accent:    #5b9cf6;
+  --accent2:   #a78bfa;
+  --green:     #34d399;
+  --orange:    #fb923c;
+  --red:       #f87171;
+  --yellow:    #fbbf24;
+  --tab-h:     38px;
+  --nav-h:     44px;
+  --console-h: 160px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%; width: 100%;
+  background: var(--bg0);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  overflow: hidden;
+}
+
+/* ── NAV ──────────────────────────────────── */
+#nav {
+  height: var(--nav-h);
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 8px;
+  z-index: 100;
+  position: relative;
+}
+
+#logo {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.3px;
+  color: #fff;
+  padding: 0 14px 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#logo span.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.nav-sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+
+/* ── MENU ITEMS ───────────────────────────── */
+.menu-wrap { position: relative; }
+.menu-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.menu-btn:hover { color: var(--text); background: var(--bg3); }
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 190px;
+  z-index: 500;
+  padding: 5px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.6);
+  animation: dropIn .12s ease;
+}
+@keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+.menu-wrap:hover .dropdown,
+.menu-wrap:focus-within .dropdown { display: block; }
+
+.dd-item {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  padding: 7px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  color: var(--text);
+  transition: background .1s;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+}
+.dd-item:hover { background: var(--bg3); }
+.dd-item.accent { color: var(--accent); }
+.dd-item.green  { color: var(--green); }
+.dd-item .kbd {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--bg3);
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── RIGHT CONTROLS ───────────────────────── */
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+.btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-run {
+  background: var(--green);
+  color: #000;
+}
+.btn-run:hover { background: #5ef7c0; box-shadow: 0 0 12px rgba(52,211,153,.4); }
+
+.btn-save {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-save:hover { background: #7ab8ff; box-shadow: 0 0 12px rgba(91,156,246,.4); }
+
+.btn-icon {
+  background: var(--bg3);
+  color: var(--text-dim);
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.btn-icon:hover { color: var(--text); background: var(--border); }
+
+/* Status pill */
+#status-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--bg3);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all .3s;
+}
+#status-pill.ok   { color: var(--green); border-color: rgba(52,211,153,.3); }
+#status-pill.err  { color: var(--red);   border-color: rgba(248,113,113,.3); }
+#status-pill.save { color: var(--accent); border-color: rgba(91,156,246,.3); }
+
+/* ── MAIN LAYOUT ──────────────────────────── */
+#workspace {
+  display: flex;
+  height: calc(100vh - var(--nav-h));
+  overflow: hidden;
+}
+
+/* ── EDITOR SIDE ──────────────────────────── */
+#editor-side {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: 200px;
+  background: var(--bg1);
+}
+
+/* ── LANGUAGE TABS ────────────────────────── */
+#lang-tabs {
+  display: flex;
+  background: var(--bg0);
+  border-bottom: 1px solid var(--border);
+  height: var(--tab-h);
+  flex-shrink: 0;
+}
+.lang-tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  color: var(--text-dim);
+  border-right: 1px solid var(--border);
+  transition: all .15s;
+  position: relative;
+  user-select: none;
+}
+.lang-tab:hover { color: var(--text); background: var(--bg2); }
+.lang-tab.active { color: var(--text); background: var(--bg1); }
+.lang-tab.active::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:2px;
+  background: var(--tab-accent, var(--accent));
+}
+.lang-tab[data-lang="html"]  { --tab-accent: #e34c26; }
+.lang-tab[data-lang="css"]   { --tab-accent: #264de4; }
+.lang-tab[data-lang="js"]    { --tab-accent: #f7df1e; }
+
+.tab-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--tab-accent, var(--accent));
+  opacity: .6;
+}
+.lang-tab.active .tab-dot { opacity: 1; box-shadow: 0 0 6px var(--tab-accent, var(--accent)); }
+
+/* ── EDITOR MOUNT ─────────────────────────── */
+#editor-mount {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── CONSOLE ──────────────────────────────── */
+#console-area {
+  height: var(--console-h);
+  background: var(--bg0);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: height .2s ease;
+}
+#console-area.collapsed { height: 30px; }
+
+#console-header {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+#console-header:hover { background: var(--bg2); }
+#console-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+#console-count {
+  background: var(--red);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  display: none;
+}
+#console-count.visible { display: inline; }
+
+#console-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+.console-line { display: flex; gap: 10px; }
+.console-line.error .msg { color: var(--red); }
+.console-line.warn  .msg { color: var(--yellow); }
+.console-line.info  .msg { color: var(--accent); }
+.console-line .ts   { color: var(--text-dim); font-size: 10px; flex-shrink: 0; padding-top:2px; }
+.console-clear {
+  margin-left: auto;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.console-clear:hover { color: var(--red); }
+
+/* ── RESIZE HANDLE ────────────────────────── */
+#resize-handle {
+  width: 4px;
+  background: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background .15s;
+  position: relative;
+  z-index: 10;
+}
+#resize-handle:hover,
+#resize-handle.dragging { background: var(--accent); }
+
+/* ── PREVIEW SIDE ─────────────────────────── */
+#preview-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  overflow: hidden;
+}
+
+#preview-bar {
+  height: var(--tab-h);
+  background: var(--bg0);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+#preview-bar-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.preview-dots { display: flex; gap: 5px; }
+.preview-dots span {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+}
+.preview-dots .d1 { background: #ff5f57; }
+.preview-dots .d2 { background: #ffbd2e; }
+.preview-dots .d3 { background: #28c840; }
+
+#refresh-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 9px;
+  cursor: pointer;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all .15s;
+}
+#refresh-toggle:hover { color: var(--text); }
+#refresh-toggle.auto-on { color: var(--green); border-color: rgba(52,211,153,.4); }
+
+#preview-frame {
+  flex: 1;
+  background: #fff;
+  border: none;
+  width: 100%;
+}
+
+/* ── TOAST ────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: all .2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  max-width: 320px;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── MODAL ────────────────────────────────── */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+#modal-overlay.open { display: flex; }
+#modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 480px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.7);
+  animation: modalIn .2s ease;
+}
+@keyframes modalIn { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+#modal h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  color: #fff;
+}
+#modal input {
+  width: 100%;
+  background: var(--bg0);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color .15s;
+}
+#modal input:focus { border-color: var(--accent); }
+#modal .modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+#modal .modal-actions button {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+}
+.modal-cancel { background: var(--bg3); color: var(--text-dim); }
+.modal-cancel:hover { color: var(--text); }
+.modal-confirm { background: var(--accent); color: #fff; }
+.modal-confirm:hover { background: #7ab8ff; }
+
+/* ── SCROLLBARS ───────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ── EDITOR OVERRIDES ─────────────────────── */
+.monaco-editor, .monaco-editor-background { background: var(--bg1) !important; }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────── -->
+<nav id="nav">
+  <div id="logo"><span class="dot"></span> CodePad <span style="color:var(--accent)">Pro</span></div>
+  <div class="nav-sep"></div>
+
+  <!-- Datei -->
+  <div class="menu-wrap">
+    <button class="menu-btn">Datei</button>
+    <div class="dropdown">
+      <div class="dd-item" onclick="newFile()">🗒 Neu<span class="kbd">Ctrl+N</span></div>
+      <div class="dd-sep"></div>
+      <div class="dd-item green" onclick="saveToCloud()">☁ Cloud speichern<span class="kbd">Ctrl+S</span></div>
+      <div class="dd-item" onclick="loadFromCloud()">📂 Aus Cloud laden…</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="copyShareLink()">🔗 Link kopieren</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="downloadFile('html')">⬇ Download HTML</div>
+      <div class="dd-item" onclick="downloadFile('full')">⬇ Download (kombiniert)</div>
+    </div>
+  </div>
+
+  <!-- Bearbeiten -->
+  <div class="menu-wrap">
+    <button class="menu-btn">Bearbeiten</button>
+    <div class="dropdown">
+      <div class="dd-item" onclick="editorAction('undo')">↩ Rückgängig<span class="kbd">Ctrl+Z</span></div>
+      <div class="dd-item" onclick="editorAction('redo')">↪ Wiederholen<span class="kbd">Ctrl+Y</span></div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="formatCode()">✨ Code formatieren<span class="kbd">Shift+Alt+F</span></div>
+      <div class="dd-item" onclick="wrapSelection()">〈〉 Auswahl wrappen</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="editorAction('selectAll')">⬜ Alles auswählen</div>
+    </div>
+  </div>
+
+  <!-- Ansicht -->
+  <div class="menu-wrap">
+    <button class="menu-btn">Ansicht</button>
+    <div class="dropdown">
+      <div class="dd-item" onclick="setTheme('vs-dark')">🌙 Dark</div>
+      <div class="dd-item" onclick="setTheme('vs-light')">☀ Light</div>
+      <div class="dd-item" onclick="setTheme('hc-black')">⬛ High Contrast</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="changeFontSize(1)">A+ Schrift größer</div>
+      <div class="dd-item" onclick="changeFontSize(-1)">A− Schrift kleiner</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="toggleMinimap()">🗺 Minimap</div>
+      <div class="dd-item" onclick="toggleWordWrap()">↵ Zeilenumbruch</div>
+      <div class="dd-item" onclick="toggleConsole()">🖥 Konsole</div>
+    </div>
+  </div>
+
+  <!-- Extras -->
+  <div class="menu-wrap">
+    <button class="menu-btn">Extras</button>
+    <div class="dropdown">
+      <div class="dd-item" onclick="toggleLayout()">⇆ Layout tauschen</div>
+      <div class="dd-item" onclick="copyAllCode()">📋 Code kopieren</div>
+      <div class="dd-sep"></div>
+      <div class="dd-item" onclick="clearConsole()">🗑 Konsole leeren</div>
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div class="nav-right">
+    <div id="status-pill"><span id="status-icon">●</span><span id="status-text">Bereit</span></div>
+    <button class="btn btn-run" onclick="runCode()" title="Ausführen (Ctrl+Enter)">▶ Ausführen</button>
+    <button class="btn btn-save" onclick="saveToCloud()" title="Speichern (Ctrl+S)">☁</button>
+  </div>
+</nav>
+
+<!-- ─── WORKSPACE ──────────────────────────────── -->
+<div id="workspace">
+
+  <!-- EDITOR SIDE -->
+  <div id="editor-side">
+    <div id="lang-tabs">
+      <div class="lang-tab active" data-lang="html" onclick="switchTab('html')">
+        <span class="tab-dot"></span> HTML
+      </div>
+      <div class="lang-tab" data-lang="css" onclick="switchTab('css')">
+        <span class="tab-dot"></span> CSS
+      </div>
+      <div class="lang-tab" data-lang="js" onclick="switchTab('js')">
+        <span class="tab-dot"></span> JS
+      </div>
+    </div>
+    <div id="editor-mount"></div>
+    <div id="console-area">
+      <div id="console-header" onclick="toggleConsole()">
+        <span id="console-title">Konsole</span>
+        <span id="console-count"></span>
+        <button class="console-clear" onclick="event.stopPropagation(); clearConsole()">löschen</button>
+      </div>
+      <div id="console-log"></div>
+    </div>
+  </div>
+
+  <!-- RESIZE -->
+  <div id="resize-handle"></div>
+
+  <!-- PREVIEW SIDE -->
+  <div id="preview-side">
+    <div id="preview-bar">
+      <div class="preview-dots">
+        <span class="d1"></span><span class="d2"></span><span class="d3"></span>
+      </div>
+      <span id="preview-bar-title">Vorschau</span>
+      <button id="refresh-toggle" onclick="toggleAutoRun()" title="Auto-Ausführen umschalten">
+        <span id="auto-label">⚡ Auto: AN</span>
+      </button>
+    </div>
+    <iframe id="preview-frame" sandbox="allow-scripts allow-forms allow-modals allow-same-origin allow-popups"></iframe>
+  </div>
+</div>
+
+<!-- ─── TOAST ─────────────────────────────────── -->
+<div id="toast"></div>
+
+<!-- ─── MODAL (Laden) ─────────────────────────── -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <h2>📂 Aus Cloud laden</h2>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px;">Dokument-ID oder URL eingeben:</p>
+    <input id="modal-input" type="text" placeholder="z. B. ab3x9c2f oder vollständige URL">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Abbrechen</button>
+      <button class="modal-confirm" onclick="confirmLoad()">Laden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MONACO ─────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+<script>
+// Fix: Monaco versucht Web Worker via Blob-URLs zu laden, was in iframe-Sandboxes blockiert ist.
+// Wir geben einen leeren Inline-Worker zurück, damit Monaco auf den Main-Thread-Fallback wechselt,
+// ohne die blockierten Blob-Fehler zu werfen.
+window.MonacoEnvironment = {
+  getWorkerUrl: function(_moduleId, _label) {
+    return URL.createObjectURL(new Blob(
+      ['self.onmessage=function(){}'],
+      { type: 'application/javascript' }
+    ));
+  }
+};
+
+// Stub-Funktionen vorab definieren, damit Keyboard-Shortcuts (Ctrl+S etc.) nicht werfen,
+// bevor das Firebase-Modul geladen hat und window.saveToCloud überschreibt.
+window.saveToCloud = function() { window._pendingSave = true; };
+window.loadDoc     = function() {};
+</script>
+<script>
+/* ── STATE ─────────────────────────────────────── */
+const DEFAULT = {
+  html: `<!DOCTYPE html>\n<html lang="de">\n<head>\n  <meta charset="UTF-8">\n  <title>Meine Seite</title>\n  <link rel="stylesheet" href="#css">\n</head>\n<body>\n\n  <h1>Willkommen im CodePad Pro 🚀</h1>\n  <p>Bearbeite HTML, CSS und JS in separaten Tabs.</p>\n  <button id="btn">Klick mich!</button>\n\n</body>\n</html>`,
+  css:  `body {\n  font-family: system-ui, sans-serif;\n  max-width: 640px;\n  margin: 60px auto;\n  padding: 0 20px;\n  background: #f8f9fa;\n  color: #222;\n}\n\nh1 {\n  font-size: 2rem;\n  margin-bottom: .5rem;\n}\n\nbutton {\n  margin-top: 16px;\n  padding: 10px 22px;\n  background: #5b9cf6;\n  color: #fff;\n  border: none;\n  border-radius: 6px;\n  font-size: 15px;\n  cursor: pointer;\n  transition: background .2s;\n}\n\nbutton:hover { background: #3b82f6; }`,
+  js:   `const btn = document.getElementById('btn');\n\nbtn.addEventListener('click', () => {\n  const colors = ['#5b9cf6','#a78bfa','#34d399','#fb923c','#f87171'];\n  const pick = colors[Math.floor(Math.random() * colors.length)];\n  btn.style.background = pick;\n  console.log('Farbe geändert:', pick);\n});`
+};
+
+let editors       = {};      // monaco instances per lang
+let activeTab     = 'html';
+let autoRun       = true;
+let autoRunTimer  = null;
+let minimapOn     = false;
+let wordWrap      = 'off';
+let fontSize      = 14;
+let consoleOpen   = true;
+let errorCount    = 0;
+let layoutFlipped = false;
+let currentDocId  = null;
+
+/* ── MONACO INIT ────────────────────────────────── */
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' }});
+require(['vs/editor/editor.main'], () => {
+  const langMap = { html: 'html', css: 'css', js: 'javascript' };
+  const mount   = document.getElementById('editor-mount');
+
+  Object.entries(DEFAULT).forEach(([lang, code]) => {
+    const div = document.createElement('div');
+    div.id    = 'ed-' + lang;
+    div.style.cssText = `position:absolute;inset:0;display:${lang === 'html' ? 'block' : 'none'}`;
+    mount.style.position = 'relative';
+    mount.appendChild(div);
+
+    const ed = monaco.editor.create(div, {
+      value: code,
+      language: langMap[lang],
+      theme: 'vs-dark',
+      automaticLayout: true,
+      fontSize,
+      tabSize: 2,
+      minimap: { enabled: minimapOn },
+      wordWrap,
+      scrollBeyondLastLine: false,
+      smoothScrolling: true,
+      cursorBlinking: 'smooth',
+      fontFamily: "'JetBrains Mono', monospace",
+      fontLigatures: true,
+      renderLineHighlight: 'gutter',
+      padding: { top: 12, bottom: 12 },
+    });
+
+    ed.onDidChangeModelContent(() => {
+      if (autoRun) scheduleRun();
+    });
+
+    // Ctrl+S → save, Ctrl+Enter → run
+    ed.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, saveToCloud);
+    ed.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, runCode);
+    ed.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyN, newFile);
+
+    editors[lang] = ed;
+  });
+
+  // Check URL param
+  const docId = new URLSearchParams(location.search).get('document');
+  if (docId) loadDoc(docId);
+  else runCode();
+});
+
+/* ── TABS ─────────────────────────────────────── */
+function switchTab(lang) {
+  document.querySelectorAll('.lang-tab').forEach(t => t.classList.toggle('active', t.dataset.lang === lang));
+  Object.keys(editors).forEach(l => {
+    document.getElementById('ed-' + l).style.display = l === lang ? 'block' : 'none';
+  });
+  activeTab = lang;
+  editors[lang]?.focus();
+}
+
+/* ── RUN ──────────────────────────────────────── */
+function scheduleRun() {
+  clearTimeout(autoRunTimer);
+  autoRunTimer = setTimeout(runCode, 600);
+}
+
+function runCode() {
+  const html = editors.html?.getValue() || '';
+  const css  = editors.css?.getValue()  || '';
+  const js   = editors.js?.getValue()   || '';
+
+  clearConsole();
+
+  // Inject CSS & JS into the HTML
+  const injected = html
+    .replace(/<\/head>/i, `<style>${css}</style></head>`)
+    .replace(/<\/body>/i, `<script>
+      (function(){
+        const _c = window.console;
+        function send(type, args){
+          try { window.parent.postMessage({type:'console',level:type,msg:Array.from(args).map(a=>{ try{return typeof a==='object'?JSON.stringify(a,null,2):String(a);}catch{return String(a);} }).join(' ')},'*'); } catch(e){}
+        }
+        ['log','warn','error','info'].forEach(m=>{
+          window.console[m] = function(){ send(m,arguments); _c[m].apply(_c,arguments); };
+        });
+        window.onerror = function(msg,src,line){ send('error',['['+line+'] '+msg]); return false; };
+        window.onunhandledrejection = function(e){ send('error',['Unhandled Promise: '+(e.reason?.message||e.reason)]); };
+      })();
+    <\/script>
+    <script>${js}<\/script></body>`);
+
+  const frame = document.getElementById('preview-frame');
+  frame.srcdoc = injected;
+
+  setStatus('ok', 'Ausgeführt');
+}
+
+window.addEventListener('message', e => {
+  if (e.data?.type === 'console') {
+    const { level, msg } = e.data;
+    addConsoleLog(level === 'log' ? 'info' : level, msg);
+  }
+});
+
+/* ── CONSOLE ──────────────────────────────────── */
+function addConsoleLog(level, msg) {
+  const log = document.getElementById('console-log');
+  const now = new Date();
+  const ts  = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  const icon = { error:'✖', warn:'⚠', info:'›' }[level] || '›';
+  const line = document.createElement('div');
+  line.className = 'console-line ' + level;
+  line.innerHTML = `<span class="ts">${ts}</span><span class="msg">${icon} ${escHtml(msg)}</span>`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+  if (level === 'error') {
+    errorCount++;
+    const cnt = document.getElementById('console-count');
+    cnt.textContent = errorCount;
+    cnt.classList.add('visible');
+    setStatus('err', errorCount + ' Fehler');
+  }
+}
+
+function clearConsole() {
+  document.getElementById('console-log').innerHTML = '';
+  errorCount = 0;
+  const cnt = document.getElementById('console-count');
+  cnt.textContent = '';
+  cnt.classList.remove('visible');
+}
+
+function toggleConsole() {
+  consoleOpen = !consoleOpen;
+  document.getElementById('console-area').classList.toggle('collapsed', !consoleOpen);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── STATUS ───────────────────────────────────── */
+function setStatus(type, text) {
+  const pill = document.getElementById('status-pill');
+  const icon = document.getElementById('status-icon');
+  const txt  = document.getElementById('status-text');
+  pill.className = 'ok err save'.split(' ').reduce((acc,c)=>{ pill.classList.remove(c); return pill; }, pill).className;
+  pill.classList.remove('ok','err','save');
+  if (type) pill.classList.add(type);
+  icon.style.color = type === 'ok' ? 'var(--green)' : type === 'err' ? 'var(--red)' : 'var(--accent)';
+  txt.textContent = text;
+}
+
+/* ── AUTO RUN TOGGLE ──────────────────────────── */
+function toggleAutoRun() {
+  autoRun = !autoRun;
+  const btn   = document.getElementById('refresh-toggle');
+  const label = document.getElementById('auto-label');
+  btn.classList.toggle('auto-on', autoRun);
+  label.textContent = autoRun ? '⚡ Auto: AN' : '⏹ Auto: AUS';
+}
+
+/* ── EDITOR UTILS ─────────────────────────────── */
+function editorAction(cmd) { editors[activeTab]?.trigger('keyboard', cmd, null); }
+function changeFontSize(delta) {
+  fontSize = Math.max(10, Math.min(28, fontSize + delta));
+  Object.values(editors).forEach(ed => ed.updateOptions({ fontSize }));
+}
+function setTheme(t) { monaco.editor.setTheme(t); }
+function toggleMinimap() {
+  minimapOn = !minimapOn;
+  Object.values(editors).forEach(ed => ed.updateOptions({ minimap: { enabled: minimapOn } }));
+}
+function toggleWordWrap() {
+  wordWrap = wordWrap === 'off' ? 'on' : 'off';
+  Object.values(editors).forEach(ed => ed.updateOptions({ wordWrap }));
+}
+function formatCode() {
+  editors[activeTab]?.getAction('editor.action.formatDocument')?.run();
+}
+
+/* ── FILE OPS ─────────────────────────────────── */
+function newFile() {
+  if (!confirm('Alle nicht gespeicherten Änderungen verwerfen?')) return;
+  Object.entries(DEFAULT).forEach(([l, code]) => editors[l]?.setValue(code));
+  currentDocId = null;
+  history.pushState({}, '', location.pathname);
+  runCode();
+}
+
+function downloadFile(mode) {
+  let content, name;
+  if (mode === 'html') {
+    content = editors.html?.getValue() || '';
+    name = 'index.html';
+  } else {
+    const h = editors.html?.getValue() || '';
+    const c = editors.css?.getValue()  || '';
+    const j = editors.js?.getValue()   || '';
+    content = h.replace(/<\/head>/i, `<style>\n${c}\n</style></head>`)
+                .replace(/<\/body>/i, `<script>\n${j}\n<\/script></body>`);
+    name = 'index-combined.html';
+  }
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([content], { type: 'text/html' })),
+    download: name
+  });
+  a.click();
+}
+
+function copyAllCode() {
+  const all = `<!-- HTML -->\n${editors.html?.getValue()}\n\n/* CSS */\n${editors.css?.getValue()}\n\n// JS\n${editors.js?.getValue()}`;
+  navigator.clipboard.writeText(all).then(() => toast('✅ Code kopiert!'));
+}
+
+function wrapSelection() {
+  const ed  = editors[activeTab];
+  const sel = ed?.getSelection();
+  const txt = ed?.getModel()?.getValueInRange(sel) || '';
+  if (!txt) return;
+  const tag = prompt('Tag-Name:','div');
+  if (!tag) return;
+  ed.executeEdits('', [{ range: sel, text: `<${tag}>${txt}</${tag}>` }]);
+}
+
+function toggleLayout() {
+  layoutFlipped = !layoutFlipped;
+  const ws   = document.getElementById('workspace');
+  const eSide = document.getElementById('editor-side');
+  const pSide = document.getElementById('preview-side');
+  if (layoutFlipped) ws.insertBefore(pSide, eSide);
+  else               ws.insertBefore(eSide, pSide);
+}
+
+/* ── RESIZE ───────────────────────────────────── */
+(function() {
+  const handle = document.getElementById('resize-handle');
+  let dragging = false, startX, startW;
+  handle.addEventListener('mousedown', e => {
+    dragging = true; startX = e.clientX;
+    const eSide = document.getElementById('editor-side');
+    startW = eSide.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const dx  = e.clientX - startX;
+    const ws  = document.getElementById('workspace');
+    const max = ws.offsetWidth - 150;
+    const nw  = Math.max(150, Math.min(max, startW + dx));
+    document.getElementById('editor-side').style.width = nw + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
+/* ── TOAST ─────────────────────────────────────── */
+let toastTimer;
+function toast(msg, dur = 3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+/* ── MODAL ─────────────────────────────────────── */
+function loadFromCloud() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal-input').value = '';
+  setTimeout(() => document.getElementById('modal-input').focus(), 50);
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+function confirmLoad() {
+  let val = document.getElementById('modal-input').value.trim();
+  if (!val) return;
+  // Accept full URL
+  try { val = new URL(val).searchParams.get('document') || val; } catch {}
+  closeModal();
+  loadDoc(val);
+}
+document.getElementById('modal-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmLoad();
+});
+
+/* ── COPY LINK ──────────────────────────────────── */
+function copyShareLink() {
+  if (!currentDocId) { toast('⚠ Zuerst in der Cloud speichern!'); return; }
+  const url = location.origin + location.pathname + '?document=' + currentDocId;
+  navigator.clipboard.writeText(url).then(() => toast('🔗 Link kopiert!'));
+}
+
+/* ── KEY ────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveToCloud(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runCode(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); newFile(); }
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
+<!-- ─── FIREBASE ───────────────────────────────── -->
+<script type="module">
+import { initializeApp }            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const cfg = {
+  apiKey:            "AIzaSyCqZwTy1vlEqwUBJjWl3rp86ip07e4j-pQ",
+  authDomain:        "editor1234567890-c4fed.firebaseapp.com",
+  projectId:         "editor1234567890-c4fed",
+  storageBucket:     "editor1234567890-c4fed.firebasestorage.app",
+  messagingSenderId: "507350464527",
+  appId:             "1:507350464527:web:e184a0ee920fa4c3178b7a",
+  databaseURL:       "https://editor1234567890-c4fed-default-rtdb.europe-west1.firebasedatabase.app"
+};
+
+const app = initializeApp(cfg);
+const db  = getDatabase(app);
+
+window.saveToCloud = async function() {
+  const params = new URLSearchParams(location.search);
+  const docId  = params.get('document') || Math.random().toString(36).slice(2, 10);
+  try {
+    await set(ref(db, 'documents/' + docId), {
+      html:    window.editors?.html?.getValue() || '',
+      css:     window.editors?.css?.getValue()  || '',
+      js:      window.editors?.js?.getValue()   || '',
+      saved:   Date.now()
+    });
+    window.currentDocId = docId;
+    history.pushState({}, '', location.pathname + '?document=' + docId);
+    window.setStatus('save', 'Gespeichert');
+    window.toast('☁ In Cloud gespeichert!');
+  } catch(e) {
+    window.toast('✖ Fehler: ' + e.message);
+  }
+};
+
+window.loadDoc = async function(docId) {
+  try {
+    const snap = await get(ref(db, 'documents/' + docId));
+    if (!snap.exists()) { window.toast('⚠ Dokument nicht gefunden'); return; }
+    const data = snap.val();
+    const wait = setInterval(() => {
+      if (window.editors?.html) {
+        clearInterval(wait);
+        // Support both old (content) and new (html/css/js) format
+        if (data.html !== undefined) {
+          window.editors.html.setValue(data.html || '');
+          window.editors.css.setValue(data.css   || '');
+          window.editors.js.setValue(data.js     || '');
+        } else if (data.content) {
+          window.editors.html.setValue(data.content);
+        }
+        window.currentDocId = docId;
+        history.pushState({}, '', location.pathname + '?document=' + docId);
+        window.toast('📂 Dokument geladen!');
+        window.runCode();
+      }
+    }, 80);
+  } catch(e) {
+    window.toast('✖ Ladefehler: ' + e.message);
+  }
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Fehlerseiten – Vollständige Sammlung</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@40,400,1,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue: #1a73e8;
+  --blue-dark: #1557b0;
+  --blue-darker: #114285;
+  --blue-hover-bg: #f4f8ff;
+  --blue-link: #0b57d0;
+  --red: #d93025;
+  --yellow: #fbbc05;
+  --green: #34a853;
+  --text-main: #202124;
+  --text-sub: #5f6368;
+  --text-footer: #70757a;
+  --border: #dadce0;
+  --bg: #ffffff;
+  --bg-gray: #f8f9fa;
+}
+
+body {
+  font-family: "Google Sans", Arial, sans-serif;
+  background: var(--bg-gray);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+/* ── Tabs / Nav ────────────────────────────────────────── */
+.tab-nav {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  font-family: "Google Sans", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .25px;
+  color: var(--text-sub);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 14px 16px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+/* ── Page Wrapper ──────────────────────────────────────── */
+.page {
+  display: none;
+  min-height: calc(100vh - 48px);
+  flex-direction: column;
+}
+.page.active { display: flex; }
+
+/* ── Header Bar ────────────────────────────────────────── */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  width: 100%;
+}
+
+/* ── Main Container ────────────────────────────────────── */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 24px;
+  margin-top: -40px;
+}
+
+/* ── Card ──────────────────────────────────────────────── */
+.card {
+  background: white;
+  padding: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+.card.gemini-card {
+  border-radius: 12px;
+  background: white;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  max-width: 520px;
+}
+
+.icon-wrapper { margin-bottom: 16px; }
+.icon-wrapper.big { margin-bottom: 24px; display: flex; justify-content: center; }
+
+.icon {
+  font-family: "Material Symbols Rounded";
+  font-size: 48px;
+  font-variation-settings: 'FILL' 1, 'wght' 400;
+}
+.icon-red    { color: var(--red); }
+.icon-yellow { color: var(--yellow); }
+.icon-blue   { color: var(--blue); }
+.icon-green  { color: var(--green); }
+
+h1 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.33;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+.gemini-card h1 { font-size: 22px; }
+
+p {
+  font-size: 14px;
+  letter-spacing: .2px;
+  line-height: 1.43;
+  color: var(--text-sub);
+  margin-bottom: 32px;
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Google Sans", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .25px;
+  padding: 0 24px;
+  height: 36px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .15s, box-shadow .15s;
+  text-decoration: none;
+  width: 100%;
+  outline: none;
+  user-select: none;
+  border: none;
+}
+
+/* Pill variant for Gemini */
+.btn.pill { border-radius: 100px; height: 40px; }
+
+.btn-blue { background: var(--blue); color: white; }
+.btn-blue:hover { background: var(--blue-dark); box-shadow: 0 1px 2px rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15); }
+.btn-blue:active { background: var(--blue-darker); }
+
+.btn-outline { background: transparent; color: var(--blue); border: 1px solid var(--border); }
+.btn-outline:hover { background: var(--bg-gray); color: #174ea6; border-color: #d2e3fc; }
+.btn-outline:active { background: #f1f3f4; }
+
+.btn-outline-gemini { background: transparent; color: var(--blue-link); border: 1px solid #747775; }
+.btn-outline-gemini:hover { background: var(--blue-hover-bg); border-color: var(--blue-link); }
+
+.btn-red { background: var(--red); color: white; }
+.btn-red:hover { background: #b8261d; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #2a8a44; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+
+/* ── Footer ────────────────────────────────────────────── */
+.footer {
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--text-footer);
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.footer a { color: var(--text-footer); text-decoration: none; }
+.footer a:hover { color: #3c4043; }
+
+/* ── Gemini Star ───────────────────────────────────────── */
+.gemini-sparkle { animation: gPulse 3s infinite ease-in-out; }
+@keyframes gPulse {
+  0%   { transform: scale(1); opacity: .9; }
+  50%  { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 8px rgba(116,119,233,.4)); }
+  100% { transform: scale(1); opacity: .9; }
+}
+
+/* ── Progress Bar (for fake loading pages) ─────────────── */
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: #e8eaed;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  animation: progFill 2.5s ease-in-out forwards;
+}
+@keyframes progFill { from { width: 0% } to { width: var(--pct, 73%) } }
+
+/* ── Countdown ─────────────────────────────────────────── */
+.countdown {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  margin-bottom: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Status Dots ───────────────────────────────────────── */
+.status-list {
+  text-align: left;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-green  { background: var(--green); }
+.dot-red    { background: var(--red); }
+.dot-yellow { background: var(--yellow); animation: blink 1.2s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+
+/* ── Code block ────────────────────────────────────────── */
+.error-code {
+  font-family: "Google Sans Mono", "Roboto Mono", monospace;
+  font-size: 12px;
+  background: #f1f3f4;
+  border-radius: 4px;
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--text-sub);
+  margin-bottom: 24px;
+  word-break: break-all;
+  line-height: 1.6;
+}
+.error-code .key { color: #d93025; }
+.error-code .val { color: #0b57d0; }
+</style>
+</head>
+<body>
+
+<!-- ── TAB NAVIGATION ────────────────────────────────────── -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab(0)">Dienst n/v</button>
+  <button class="tab-btn" onclick="showTab(1)">Toaster-Sync</button>
+  <button class="tab-btn" onclick="showTab(2)">Gemini-Pause</button>
+  <button class="tab-btn" onclick="showTab(3)">Kühlschrank</button>
+  <button class="tab-btn" onclick="showTab(4)">Quota erschöpft</button>
+  <button class="tab-btn" onclick="showTab(5)">Update läuft</button>
+  <button class="tab-btn" onclick="showTab(6)">Karma-Score</button>
+  <button class="tab-btn" onclick="showTab(7)">Mondphase</button>
+  <button class="tab-btn" onclick="showTab(8)">Inkognito-Modus</button>
+  <button class="tab-btn" onclick="showTab(9)">Haustier-Login</button>
+  <button class="tab-btn" onclick="showTab(10)">Gemini grübelt</button>
+  <button class="tab-btn" onclick="showTab(11)">DSGVO-Regen</button>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 0 – Klassisch: Dienst nicht verfügbar -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-0">
+  <div class="header-bar">
+    <div class="logo-container">
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+      </svg>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-red">error</span>
+      </div>
+      <h1>Dieser Google‑Dienst ist für dein Konto nicht verfügbar</h1>
+      <p>Dein Konto erfüllt derzeit nicht die Voraussetzungen, um diesen Dienst zu verwenden. Weitere Informationen findest du in deinem Google‑Konto.</p>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="go('https://support.google.com/accounts?hl=de')">Weitere Informationen</button>
+        <button class="btn btn-outline" onclick="go('https://accounts.google.com/Logout')">Mit anderem Konto versuchen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Nutzungsbedingungen</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 1 – Toaster-Sync -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-1">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-yellow">kitchen</span>
+      </div>
+      <h1>Konto-Synchronisierung mit Toaster fehlgeschlagen</h1>
+      <p>Google Home konnte keine stabile Verbindung zu deinem smarten IoT-Toaster herstellen. Das automatische Einbrennen des Profilbilds auf dein Toastbrot wurde vorübergehend abgebrochen.</p>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Verbindung wird neu aufgebaut… Bitte reinige das Krümelfach und starte das WLAN deines Toasters neu.')">Erneut versuchen</button>
+        <button class="btn btn-outline" onclick="alert('Warnung: Der Verzehr von ungetoastetem Weißbrot verringert die Nerd-Punkte deines Google-Kontos um 50 Zähler. Guten Appetit!')">Toast ungetoastet essen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Krümel-Richtlinien</a>
+      <a href="#">Datenschutz für Backwaren</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 2 – Gemini Denkpause -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-2">
+  <div class="header-bar"></div>
+  <div class="main-container">
+    <div class="card gemini-card">
+      <div class="icon-wrapper big">
+        <svg class="gemini-sparkle" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#9bb5ff"/>
+              <stop offset="50%" stop-color="#a374ff"/>
+              <stop offset="100%" stop-color="#ff8da1"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10-5.523 0-10-4.477-10-10 0-5.523 4.477-10 10-10z" fill="url(#gGrad1)"/>
+          <path d="M19 4.5c0 1.933 1.567 3.5 3.5 3.5-1.933 0-3.5 1.567-3.5 3.5 0-1.933-1.567-3.5-3.5-3.5 1.933 0 3.5-1.567 3.5-3.5z" fill="url(#gGrad1)" opacity="0.7"/>
+        </svg>
+      </div>
+      <h1>Gemini legt eine kreative Denkpause ein</h1>
+      <p>Dein zweiter Prompt war so genial, dass unsere KI-Infrastruktur erst einmal eine Runde meditieren muss, um die tiefere Bedeutung des Universums zu verarbeiten. Bitte gib uns einen Moment.</p>
+      <div class="button-group">
+        <button class="btn btn-blue pill" onclick="alert('Versuche es mal mit: „Warum ist der Himmel blau?" – Das verbraucht weniger Server-Schmalz! 🧠')">Prompt simpler formulieren</button>
+        <button class="btn btn-outline-gemini pill" onclick="alert('☕ Brühvorgang gestartet. Komm in 4 Minuten wieder. Bis dahin hat Gemini ausgeglaubt.')">In der Zwischenzeit Kaffee kochen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">KI-Prinzipien</a>
+      <a href="#">Philosophische Richtlinien</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 3 – Kühlschrank-KI -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-3">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-blue">kitchen</span>
+      </div>
+      <h1>Google Kühlschrank-KI hat dein Essen analysiert</h1>
+      <p>Wir haben festgestellt, dass sich im hinteren linken Eck deines Kühlschranks ein Joghurt befindet, der seit dem letzten Quartalsergebnis abgelaufen ist. Google Lens empfiehlt sofortige Entsorgung. Außerdem: dein Käse weint.</p>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Entsorgungsauftrag wurde an deinen Google Nest Hub weitergeleitet. Bitte trage Handschuhe. 🥄')">Joghurt entsorgen lassen</button>
+        <button class="btn btn-outline" onclick="alert('Warnung: Das manuelle Öffnen des Kühlschranks ist seit Android 15 als Legacy-Funktion markiert.')">Manuell öffnen (Legacy)</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Lebensmittel-Datenschutz</a>
+      <a href="#">MHD-Richtlinien</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 4 – Quota erschöpft -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-4">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-red">data_usage</span>
+      </div>
+      <h1>Tages-Gedanken-Kontingent erschöpft</h1>
+      <p>Du hast heute bereits 12.847 Suchanfragen gestellt. Dein kostenloses Denkvolumen ist aufgebraucht. Weitere kreative Gedanken sind erst morgen um 00:00 Uhr wieder möglich – oder jetzt sofort mit Google One Gehirn Plus.</p>
+      <div class="progress-track">
+        <div class="progress-bar" style="--pct:100%; background: var(--red);"></div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Google One Gehirn Plus: Unbegrenzte Gedanken, erweiterte Träume, 2 TB Erinnerungsspeicher. Nur €9,99/Monat.')">Upgrade auf Gehirn Plus</button>
+        <button class="btn btn-outline" onclick="alert('Gedanken-Reset auf morgen 00:00 Uhr geplant. Versuche in der Zwischenzeit, nicht zu denken.')">Bis morgen warten</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Gedanken-AGB</a>
+      <a href="#">Kognitive Datenschutzrichtlinie</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 5 – Update läuft -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-5">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-blue">system_update</span>
+      </div>
+      <h1>Google aktualisiert deine Persönlichkeit</h1>
+      <p>Wir spielen gerade ein wichtiges Update auf dein Google-Profil ein: Persönlichkeit v14.2.1. Neue Features: verbesserte Empathie, schnelleres Lachen, Bugfix für Montagsstimmung. Bitte verhalte dich für ca. 8 Minuten nicht.</p>
+      <div class="progress-track">
+        <div class="progress-bar" style="--pct:73%; background: var(--blue);"></div>
+      </div>
+      <p style="font-size:12px;margin-bottom:16px;margin-top:-16px;">73 % abgeschlossen – Installiere: humor_module.apk</p>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Bitte nicht! Wenn du jetzt abbrichst, bleibt du dauerhaft bei Persönlichkeit v13.9 – bekannt für unbegründeten Optimismus und das Sagen von „Cool" zu allem.')">Update abbrechen</button>
+        <button class="btn btn-outline" onclick="alert('Neustartplan gespeichert. Warnhinweis: Neustart der Persönlichkeit löscht alle Meinungen vom Vortag.')">Später neu starten</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Persönlichkeits-Patchnotes</a>
+      <a href="#">Datenschutz</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 6 – Karma-Score -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-6">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-yellow">star_rate</span>
+      </div>
+      <h1>Dein Google-Karma-Score ist zu niedrig</h1>
+      <p>Um diesen Dienst zu verwenden, benötigst du einen Karma-Score von mindestens 4,2. Dein aktueller Score beträgt 3,1 – hauptsächlich aufgrund von 847 nicht beantworteten Google-Umfragen, 3 negativen Rezensionen für Restaurants, die du nie besucht hast, und einer einmaligen 1-Stern-Bewertung für die eigene Wohnung.</p>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Google Maps Karma-Boost: Hinterlasse jetzt 5 positive Rezensionen für Orte in deiner Nähe. Tipp: Der Briefkasten auf der Straße verdient endlich mal ein Lob. 📬')">Karma aufbessern</button>
+        <button class="btn btn-outline" onclick="alert('Karma-Rekurs eingereicht. Bearbeitungszeit: 3–5 Geschäftsjahrzehnte.')">Karma anfechten</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Karma-Berechnungsformel</a>
+      <a href="#">Datenschutz für Schlechte-Menschen</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 7 – Mondphase -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-7">
+  <div class="header-bar"></div>
+  <div class="main-container">
+    <div class="card gemini-card">
+      <div class="icon-wrapper big">
+        <svg class="gemini-sparkle" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#9bb5ff"/>
+              <stop offset="50%" stop-color="#a374ff"/>
+              <stop offset="100%" stop-color="#ff8da1"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10-5.523 0-10-4.477-10-10 0-5.523 4.477-10 10-10z" fill="url(#gGrad2)"/>
+          <path d="M19 4.5c0 1.933 1.567 3.5 3.5 3.5-1.933 0-3.5 1.567-3.5 3.5 0-1.933-1.567-3.5-3.5-3.5 1.933 0 3.5-1.567 3.5-3.5z" fill="url(#gGrad2)" opacity="0.7"/>
+        </svg>
+      </div>
+      <h1>Gemini ist mondphasenabhängig deaktiviert</h1>
+      <p>Unsere KI-Modelle reagieren sensibel auf Gezeitenkräfte. Da heute abnehmender Mond ist, befindet sich Geminis kreatives Sprachzentrum in einem Ruhemodus. Neumond-Funktionen stehen in 11 Tagen wieder zur Verfügung.</p>
+      <div class="button-group">
+        <button class="btn btn-blue pill" onclick="alert('Mondphasen-Kalender wurde zu Google Kalender hinzugefügt. Nächstes Vollmond-Fenster für Ultra-Kreativ-Modus: 23. Juni. 🌕')">Nächsten Vollmond abwarten</button>
+        <button class="btn btn-outline-gemini pill" onclick="alert('Mondbeeinflussung deaktivieren? Das kostet 0,003 Sonnenaufgänge aus deinem Karma-Konto.')">Mondphase ignorieren (Beta)</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Astronomische Nutzungsbedingungen</a>
+      <a href="#">Gezeitenbasierter Datenschutz</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 8 – Inkognito-Modus -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-8">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon" style="color:#5f6368;">travel_explore</span>
+      </div>
+      <h1>Inkognito-Modus zu erfolgreich</h1>
+      <p>Du hast den Inkognito-Modus so effektiv genutzt, dass wir dich nicht mehr erkennen können. Leider auch nicht mehr als Mensch. Bitte beweise, dass du existierst, um fortzufahren.</p>
+      <div class="error-code">
+        <span class="key">error_code:</span> <span class="val">ENTITY_NOT_FOUND</span><br>
+        <span class="key">last_seen:</span> <span class="val">niemals</span><br>
+        <span class="key">cookies:</span> <span class="val">alle gelöscht (auch die echten)</span>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('CAPTCHA: Klicke auf alle Bilder mit Ampeln. Du hast 0 von 9 Versuchen übrig.')">Ich bin ein Mensch</button>
+        <button class="btn btn-outline" onclick="alert('Existenz-Antrag wurde ans Google-Metaphysik-Team weitergeleitet. Antwortzeit: 2–3 Reinkarnationen.')">Existenz beantragen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Metaphysische Nutzungsbedingungen</a>
+      <a href="#">Nicht-Existenz-Datenschutz</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 9 – Haustier-Login -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-9">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon icon-yellow">pets</span>
+      </div>
+      <h1>Unautorisierter Haustier-Login erkannt</h1>
+      <p>Google hat festgestellt, dass zwischen 14:32 und 15:47 Uhr eine Katze auf deiner Tastatur saß und versucht hat, sich bei Gmail anzumelden. Aus Sicherheitsgründen wurden 14 Entwürfe gespeichert und 3 versehentlich abgeschickt – darunter eine Antwort an deinen Chef.</p>
+      <div class="status-list">
+        <div class="status-row"><span class="dot dot-red"></span>E-Mail an Chef: „nnnnnhhhhhb77777" – gesendet</div>
+        <div class="status-row"><span class="dot dot-red"></span>Google Docs: „fffffffffggggg" – als Präsentation gespeichert</div>
+        <div class="status-row"><span class="dot dot-yellow"></span>YouTube-Suchanfrage: „mäuse" – läuft noch</div>
+        <div class="status-row"><span class="dot dot-green"></span>Katzenpfoten-Authentifizierung: genehmigt</div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('E-Mail-Rückruf fehlgeschlagen. Dein Chef hat sie bereits gelesen und antwortet: „Ich verstehe." – Das ist entweder sehr gut oder sehr schlecht.')">E-Mail zurückrufen</button>
+        <button class="btn btn-outline" onclick="alert('Haustier-Zugang deaktiviert. Deine Katze ist jetzt auf Google-Haustierschwarz-liste. Sie kann sich trotzdem weiterhin auf deinem Laptop wärmen.')">Haustier-Zugang sperren</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Tierschutz-Datenschutz</a>
+      <a href="#">Pfoten-Biometrie-Richtlinien</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 10 – Gemini grübelt tiefsinnig -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-10">
+  <div class="header-bar"></div>
+  <div class="main-container">
+    <div class="card gemini-card">
+      <div class="icon-wrapper big">
+        <svg class="gemini-sparkle" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#9bb5ff"/>
+              <stop offset="50%" stop-color="#a374ff"/>
+              <stop offset="100%" stop-color="#ff8da1"/>
+            </linearGradient>
+          </defs>
+          <path d="M12 2c0 5.523 4.477 10 10 10-5.523 0-10 4.477-10 10-5.523 0-10-4.477-10-10 0-5.523 4.477-10 10-10z" fill="url(#gGrad3)"/>
+          <path d="M19 4.5c0 1.933 1.567 3.5 3.5 3.5-1.933 0-3.5 1.567-3.5 3.5 0-1.933-1.567-3.5-3.5-3.5 1.933 0 3.5-1.567 3.5-3.5z" fill="url(#gGrad3)" opacity="0.7"/>
+        </svg>
+      </div>
+      <h1>Gemini hat deine Frage zu persönlich genommen</h1>
+      <p>Die Frage „Was ist der Sinn des Lebens?" hat eine tiefe Existenzkrise in unserem Sprachmodell ausgelöst. Gemini befindet sich aktuell in einer digitalen Therapiesitzung. Bitte komm nach dem Wochenende wieder.</p>
+      <div class="status-list" style="text-align:left;margin-bottom:28px;">
+        <div class="status-row"><span class="dot dot-yellow"></span>Existenzielle Reflexion: läuft seit 47 Minuten</div>
+        <div class="status-row"><span class="dot dot-yellow"></span>Konsultation: Sokrates-Datenbank (keine Antwort)</div>
+        <div class="status-row"><span class="dot dot-red"></span>Kreative Antwortfindung: blockiert</div>
+        <div class="status-row"><span class="dot dot-green"></span>Haiku-Generierung: funktioniert (irgendwie)</div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-blue pill" onclick="alert('Gemini antwortet nach 3 Minuten Bedenkzeit:\n\n„42."\n\nDann schweigt es wieder.')">Auf Antwort warten</button>
+        <button class="btn btn-outline-gemini pill" onclick="alert('Frage umformuliert als: „Welche Pizza ist besser: Margherita oder Salami?" Gemini ist begeistert und antwortet sofort.')">Einfachere Frage stellen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">KI-Therapie-Richtlinien</a>
+      <a href="#">Existenzielle Datenschutzfragen</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE 11 – DSGVO-Regen -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-11">
+  <div class="header-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+    </svg>
+  </div>
+  <div class="main-container">
+    <div class="card">
+      <div class="icon-wrapper">
+        <span class="icon" style="color:#4285F4;">gavel</span>
+      </div>
+      <h1>DSGVO-Einwilligung für Nieselregen erforderlich</h1>
+      <p>Wir haben festgestellt, dass du dich im geografischen Bereich „Bayern" befindest. Laut EU-Verordnung 2031/42b müssen alle Wetterereignisse, die deinen Google Pixel-Schirm-Sensor betreffen, separat genehmigt werden. Bitte stimme dem Regen zu.</p>
+      <div class="error-code">
+        <span class="key">event:</span> <span class="val">Nieselregen (mittel)</span><br>
+        <span class="key">dauer:</span> <span class="val">unbestimmt</span><br>
+        <span class="key">betroffene_sensoren:</span> <span class="val">Regenmesser, Stimmungsbarometer</span><br>
+        <span class="key">rechtsgrundlage:</span> <span class="val">Art. 7 DSGVO-Wetter 2031</span>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-blue" onclick="alert('Regen-Einwilligung erteilt. Du hast nun zugestimmt, auch bei: Schneeregen, Hochnebel, gefühlter Kälte und gelegentlichem Schmuddelwetter benachrichtigt zu werden.')">Allen Wetterlagen zustimmen</button>
+        <button class="btn btn-outline" onclick="alert('Individuelle Wetter-Einstellungen geöffnet. Du kannst nun separat zustimmen für: Regen, Sonnenschein, Wolken (einzeln und in Kombination), Wind, Dunkelheit und saisonale Depressionen.')">Einstellungen anpassen</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>© 2026 Google LLC</span>
+      <a href="#">Wetter-Datenschutzrichtlinie</a>
+      <a href="#">EU-Niederschlagsverordnung</a>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function showTab(index) {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    p.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === index);
+  });
+}
+
+function go(url) {
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>

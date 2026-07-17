@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GÜN Linienübersicht</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0e14;--surface:#13181f;--card:#1a2030;
+  --border:#222a38;--text:#dde4f0;--dim:#5a6580;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:60px;}
+
+/* HEADER */
+header{
+  padding:28px 24px 20px;
+  background:linear-gradient(160deg,#0d0f18 0%,#12151e 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+}
+.logo{font-family:'Barlow',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:.5px;}
+.logo span{color:#ff0022;}
+.header-right{margin-left:auto;text-align:right;}
+.header-date{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+
+/* FILTER BAR */
+.filter-bar{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:12px 24px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+}
+.fb{
+  padding:5px 12px;border-radius:20px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--dim);
+  font-size:10px;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:.12s;
+}
+.fb:hover{color:var(--text);border-color:#405060;}
+.fb.on{color:#fff;border-color:var(--c,#fff);background:color-mix(in srgb,var(--c,#fff) 12%,transparent);}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:28px 24px 0;}
+
+/* SECTION HEADING */
+.section-heading{
+  display:flex;align-items:center;gap:12px;
+  margin:28px 0 14px;
+}
+.sh-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.sh-title{font-family:'Barlow',sans-serif;font-size:13px;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;color:var(--dim);}
+.sh-line{flex:1;height:1px;background:var(--border);}
+
+/* LINE CARD */
+.line-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;margin-bottom:12px;overflow:hidden;
+  transition:border-color .15s;
+}
+.line-card:hover{border-color:#354060;}
+.line-card.hidden{display:none;}
+
+/* Card top accent */
+.lc-bar{height:3px;}
+
+/* Card header */
+.lc-head{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px 10px;
+}
+.lc-badge{
+  font-family:'Barlow',sans-serif;font-size:18px;font-weight:900;
+  color:#fff;padding:5px 12px;border-radius:8px;
+  flex-shrink:0;letter-spacing:.5px;min-width:60px;text-align:center;
+}
+.lc-route{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;
+  color:#fff;letter-spacing:.3px;
+}
+.lc-type{
+  margin-left:auto;font-size:9px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--dim);flex-shrink:0;
+}
+
+/* Station row */
+.lc-stations{
+  padding:0 16px 14px;
+  display:flex;align-items:center;
+  flex-wrap:wrap;gap:0;
+  position:relative;
+}
+.stn{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+  flex-shrink:0;
+}
+.stn-dot{
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid #fff;background:var(--card);
+  flex-shrink:0;
+  position:relative;z-index:2;
+}
+.stn-dot.terminus{
+  width:12px;height:12px;border-width:2.5px;
+}
+.stn-dot.interchange{
+  width:13px;height:13px;border-width:2.5px;
+  background:#fff;
+}
+.stn-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  color:var(--text);letter-spacing:.3px;
+  margin-top:5px;text-align:center;max-width:72px;line-height:1.2;
+  white-space:normal;
+}
+.stn-name.terminus-name{font-weight:900;color:#fff;}
+.stn-connector{
+  height:3px;flex:1;min-width:8px;max-width:36px;
+  position:relative;top:-18px;
+  border-radius:1.5px;
+}
+/* interchange marker */
+.stn-xfer{
+  font-size:7px;font-weight:700;letter-spacing:.5px;
+  color:var(--dim);margin-top:2px;text-align:center;
+  max-width:72px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GÜN<span>.</span></div>
+  <div>
+    <div class="header-date">Juni · Güntringer Verkehrsbetriebe</div>
+    <div class="header-title">Linienübersicht</div>
+  </div>
+</header>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="fb on" data-f="ALL" style="--c:#fff" onclick="filt('ALL',this)">Alle</button>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA — aus Netzplan Juni
+═══════════════════════════════════════════ */
+const LINES_ALL = [
+  // Hochbahn
+  {id:'L14', color:'#024d97', type:'Hochbahn',
+   route:'Falkenberg ↔ Sonnenstadt',
+   stops:[
+     {name:'Falkenberg',        terminus:true,  xfer:[]},
+     {name:'Neuer Ring',        terminus:false, xfer:[]},
+     {name:'Regierungsviertel', terminus:false, xfer:['L15']},
+     {name:'Altgüner Vorstadt', terminus:false, xfer:['L15']},
+     {name:'Altgün Mitte',      terminus:false, xfer:[]},
+     {name:'Altgün Dreieck',    terminus:false, xfer:['RS251','S11','L15','L16','S24']},
+     {name:'Neusüd',            terminus:false, xfer:[]},
+     {name:'Seenring',          terminus:false, xfer:[]},
+     {name:'Sonnenwald',        terminus:false, xfer:[]},
+     {name:'Technopolis',       terminus:false, xfer:['L17']},
+     {name:'Sonnenstadt',       terminus:true,  xfer:[]},
+   ]},
+  {id:'L15', color:'#8b4513', type:'Hochbahn',
+   route:'Westende ↔ Altgün Dreieck',
+   stops:[
+     {name:'Westende',            terminus:true,  xfer:[]},
+     {name:'Güntringen GünPark',  terminus:false, xfer:[]},
+     {name:'ZOB Flussbezirk',     terminus:false, xfer:[]},
+     {name:'Falkenberger Allee',  terminus:false, xfer:[]},
+     {name:'Regierungsviertel',   terminus:false, xfer:['L14']},
+     {name:'Altgüner Vorstadt',   terminus:false, xfer:['L14']},
+     {name:'Sâscha-Okto-Ring',   terminus:false, xfer:[]},
+     {name:'Vûlfja-Hüpel-Allee', terminus:false, xfer:[]},
+     {name:'Altgün Markt',        terminus:false, xfer:[]},
+     {name:'Altgün Center',       terminus:false, xfer:[]},
+     {name:'Altgün Dreieck',      terminus:true,  xfer:['RS251','S11','L14','L16','S24']},
+   ]},
+  {id:'L16', color:'#27ae60', type:'Hochbahn',
+   route:'Altgün Dreieck ↔ Hügelbezirk Süd',
+   stops:[
+     {name:'Altgün Dreieck',    terminus:true,  xfer:['RS251','S11','L14','L15','S24']},
+     {name:'Altgün Ost',        terminus:false, xfer:['L17']},
+     {name:'Krakingerallee',    terminus:false, xfer:[]},
+     {name:'Burg',              terminus:false, xfer:[]},
+     {name:'Vélicherring',      terminus:false, xfer:[]},
+     {name:'Osttal',            terminus:false, xfer:[]},
+     {name:'Villenviertel',     terminus:false, xfer:[]},
+     {name:'Ostrich',           terminus:false, xfer:[]},
+     {name:'Hügelbezirk Süd',   terminus:false,  xfer:[]},
+     {name:'Hügelbezirk Ost',   terminus:false,  xfer:[]},
+     {name:'Airport West (Airport Tunnel)',   terminus:true,  xfer:['S61']},
+     {name:'GÜN Airport Parkstraße/GÜN Airport Parkway',   terminus:true,  xfer:[]},
+     {name:'GÜN Airport Hbf/GÜN Airport Central',   terminus:true,  xfer:['RS119']},
+   ]},
+  {id:'L17', color:'#861d96', type:'Hochbahn',
+   route:'Güntringen Hbf ↔ Oktratal',
+   stops:[
+     {name:'Güntringen Hbf',       terminus:true,  xfer:['RS251','S11','S12','S20a','RS119','S23']},
+     {name:'Altgün Ost',           terminus:false, xfer:['L16']},
+     {name:'Südstern',             terminus:false, xfer:[]},
+     {name:'Südtor',               terminus:false, xfer:[]},
+     {name:'Technopolis',          terminus:false, xfer:['L14']},
+     {name:'Oktratal Ortseingang', terminus:false, xfer:[]},
+     {name:'Oktratal',             terminus:true,  xfer:[]},
+   ]},
+  // S-Bahn
+  {id:'S11', color:'#ff0022', type:'S-Bahn',
+   route:'Villotal Hbf ↔ Lixen (Güntr.) Hbf',
+   stops:[
+     {name:'Villotal Hbf',        terminus:true,  xfer:['S12','S20','S20a']},
+     {name:'Villotal Süd',        terminus:false, xfer:['RS251','S12','S20a']},
+     {name:'Güntringen Nord',     terminus:false, xfer:['RS251','S20a','RS119','S22']},
+     {name:'Güntringen Hbf',      terminus:false, xfer:['RS251','S12','S20a','S23','S24','L17','RS119']},
+     {name:'Altgün Dreieck',      terminus:false, xfer:['RS251','L14','L15','L16','S24']},
+     {name:'Güntringen Süd',      terminus:false, xfer:['RS251','S23','S24']},
+     {name:'Güntratal Süd',       terminus:false, xfer:['RS87']},
+     {name:'Lixen (Güntr.) Hbf',  terminus:true,  xfer:[]},
+   ]},
+  {id:'S12', color:'#4a90d9', type:'S-Bahn',
+   route:'Güntringen Hbf ↔ Möhlen Nord',
+   stops:[
+     {name:'Güntringen Hbf',  terminus:true,  xfer:['RS251','S11','S20a','S23','S24','L17','RS119']},
+     {name:'Villotal Süd',    terminus:false, xfer:['RS251','S11','S20a']},
+     {name:'Lünberg',         terminus:false, xfer:['RS251','S20','S20a']},
+     {name:'Villotal Hbf',    terminus:false, xfer:['S11','S20','S20a']},
+     {name:'Gemberg',         terminus:false, xfer:['S20']},
+     {name:'Sternberg',       terminus:false, xfer:['S22']},
+     {name:'Kühltal',         terminus:false, xfer:['S22']},
+     {name:'Möhlen Hbf',      terminus:false, xfer:['S22']},
+     {name:'Möhlen Nord',     terminus:true,  xfer:[]},
+   ]},
+  {id:'S20', color:'#00b894', type:'S-Bahn',
+   route:'Güntringen Hafen ↔ Gemberg Nord',
+   stops:[
+     {name:'Güntringen Hafen',  terminus:true,  xfer:['RS251','S20a']},
+     {name:'Norderschlüssel',   terminus:false, xfer:['S20a']},
+     {name:'Lünberg',           terminus:false, xfer:['RS251','S12','S20a']},
+     {name:'Villotal Hbf',      terminus:false, xfer:['S11','S12','S20a']},
+     {name:'Gemberg',           terminus:false, xfer:['S12']},
+     {name:'Gemberg Nord',      terminus:true,  xfer:[]},
+   ]},
+  {id:'S20a', color:'#00b894', type:'S-Bahn',
+   route:'Güntringen Anleger ↔ Güntringen Hbf',
+   stops:[
+     {name:'Güntringen Anleger', terminus:true,  xfer:['RS251']},
+     {name:'Güntringen Hafen',   terminus:false, xfer:['RS251','S20']},
+     {name:'Norderschlüssel',    terminus:false, xfer:['S20']},
+     {name:'Lünberg',            terminus:false, xfer:['RS251','S12','S20']},
+     {name:'Villotal Süd',       terminus:false, xfer:['RS251','S11','S12']},
+     {name:'Güntringen Nord',    terminus:false, xfer:['RS251','S11','S22','RS119']},
+     {name:'Güntringen Hbf',     terminus:true,  xfer:['RS251','S11','S12','S23','S24','L17','RS119']},
+   ]},
+  {id:'S22', color:'#8878d8', type:'S-Bahn',
+   route:'Sternberg ↔ Möhlen-Meckleckhausen',
+   stops:[
+     {name:'Sternberg',             terminus:true,  xfer:['S12']},
+     {name:'Kühltal',               terminus:false, xfer:['S12']},
+     {name:'Möhlen Hbf',            terminus:false, xfer:['S12']},
+     {name:'Sternberg-Neustadt',    terminus:false, xfer:[]},
+     {name:'Neuhausen',             terminus:false, xfer:[]},
+     {name:'Möhlen-Meckleckhausen', terminus:true,  xfer:[]},
+   ]},
+  {id:'S23', color:'#5f27cd', type:'S-Bahn',
+   route:'Güntringen Hbf ↔ Krakschlüssel',
+   stops:[
+     {name:'Güntringen Hbf', terminus:true,  xfer:['RS251','S11','S12','S20a','S24','L17','RS119']},
+     {name:'Güntringen Süd', terminus:false, xfer:['RS251','S11','S24']},
+     {name:'Güntratal West', terminus:false, xfer:['RS251','S24']},
+     {name:'Falbergertal',   terminus:false, xfer:['S24']},
+     {name:'Krakschlüssel',  terminus:true,  xfer:['RS251']},
+   ]},
+  {id:'S24', color:'#c0392b', type:'S-Bahn',
+   route:'Altgün Dreieck ↔ Fleischberg Westhafen',
+   stops:[
+     {name:'Altgün Dreieck',        terminus:true,  xfer:['RS251','S11','L14','L15','L16']},
+     {name:'Güntringen Süd',        terminus:false, xfer:['RS251','S11','S23']},
+     {name:'Güntratal West',        terminus:false, xfer:['RS251','S23']},
+     {name:'Falbergertal',          terminus:false, xfer:['S23']},
+     {name:'Fleischberg',           terminus:false, xfer:[]},
+     {name:'Fleischberg Westhafen', terminus:true,  xfer:[]},
+   ]},
+  // RS
+  {id:'RS87', color:'#ff6b6b', type:'Regionalservice',
+   route:'Güntratal Süd ↔ Landwart Hbf',
+   stops:[
+     {name:'Güntratal Süd', terminus:true,  xfer:['S11']},
+     {name:'Lixen Nord',    terminus:false, xfer:[]},
+     {name:'Hausfallstadt', terminus:false, xfer:[]},
+     {name:'Altbrulzen',    terminus:false, xfer:[]},
+     {name:'Landwart Hbf',  terminus:true,  xfer:[]},
+   ]},
+  {id:'RS119', color:'#e84393', type:'Regionalservice',
+   route:'Güntringen Hbf ↔ Terminal 2',
+   stops:[
+     {name:'Güntringen Hbf',        terminus:true,  xfer:['RS251','S11','S12','S20a','S23','S24','L17']},
+     {name:'Güntringen Nord',       terminus:false, xfer:['RS251','S11','S20a','S22']},
+     {name:'Güntringen Airport Hbf/GÜN Airport Central',terminus:false, xfer:['L16']},
+     {name:'Terminal 1',            terminus:false, xfer:[]},
+     {name:'Terminal 2',            terminus:true,  xfer:[]},
+   ]},
+   {id:'RS251', color:'#777777', type:'Regionalservice',
+   route:'Güntringen Anleger ↔ Krakschlüssel',
+   stops:[
+     {name:'(Güntringen Anleger)',      terminus:true,  xfer:['S20a']},
+     {name:'Güntringen Hafen',   	terminus:false,  xfer:['S20a','S20']},
+     {name:'Lünberg',            	terminus:false,  xfer:['S20a','S20','S12']},
+     {name:'Villotal Süd',            	terminus:false,  xfer:['S20a','S11','S12']},
+     {name:'Güntringen Nord',           terminus:false,  xfer:['S11','S20a','S22','S12','RS119']},
+     {name:'Güntringen Hbf',           	terminus:false,  xfer:['S11','S12','S23','S20a','L17','RS119']},
+     {name:'Altgün Dreieck',            terminus:false,  xfer:['S11','L14','L15','L16','S24']},
+     {name:'Güntringen Süd',            terminus:false,  xfer:['S11','S24','S23']},
+     {name:'Güntratal West',            terminus:false,  xfer:['S23','S24']},
+     {name:'Krakschlüssel',            	terminus:true,  xfer:['S23']},
+   ]},
+   {id:'FCGün', color:'#777777', type:'Sonderverbindung',
+   route:'Güntringen Shuttle',
+   stops:[
+     {name:'Altgün Dreieck',      terminus:true,  xfer:[]},
+     {name:'Altgün Markt (B→)',            terminus:false,  xfer:[]},
+     {name:'Sâscha-Okto-Ring (B→)',            	terminus:false,  xfer:[]},
+	{name:'Regierungsviertel (B→, R←)',            	terminus:false,  xfer:[]},
+	{name:'GünPark',            	terminus:false,  xfer:[]},
+	{name:'Westende',            	terminus:true,  xfer:[]},
+   ]},
+];
+/* ═══════════════════════════════════════════
+   BUILD
+═══════════════════════════════════════════ */
+const GROUPS = [
+  { label:'🚄 Hochbahn',       icon:'🚄', iconBg:'#012d5e22', ids:['L14','L15','L16','L17'] },
+  { label:'🚆 S-Bahn',         icon:'🚆', iconBg:'#7b000022', ids:['S11','S12','S20','S20a','S22','S23','S24'] },
+  { label:'🚅 Regionalservice', icon:'🚅', iconBg:'#e8439322', ids:['RS87','RS119','RS251'] },
+  { label:'🚅 Sonderverbindung', icon:'🚅', iconBg:'#e8439322', ids:['FCGün'] },
+];
+
+function buildFilters() {
+  const bar = document.getElementById('filter-bar');
+  LINES_ALL.forEach(l => {
+    const btn = document.createElement('button');
+    btn.className = 'fb';
+    btn.dataset.f = l.id;
+    btn.textContent = l.id;
+    btn.style.setProperty('--c', l.color);
+    btn.onclick = () => filt(l.id, btn);
+    bar.appendChild(btn);
+  });
+}
+
+function buildContent() {
+  const cont = document.getElementById('content');
+  cont.innerHTML = '';
+
+  GROUPS.forEach(grp => {
+    const secHead = document.createElement('div');
+    secHead.className = 'section-heading';
+    secHead.dataset.group = grp.ids.join(' ');
+    secHead.innerHTML = `
+      <div class="sh-icon" style="background:${grp.iconBg};border:1px solid rgba(255,255,255,.08)">${grp.icon}</div>
+      <div class="sh-title">${grp.label}</div>
+      <div class="sh-line"></div>`;
+    cont.appendChild(secHead);
+
+    grp.ids.forEach(lid => {
+      const l = LINES_ALL.find(x => x.id === lid);
+      if (!l) return;
+
+      const card = document.createElement('div');
+      card.className = 'line-card';
+      card.dataset.lid = lid;
+
+      // Build stations HTML
+      let stationsHtml = '';
+      l.stops.forEach((s, i) => {
+        const isFirst = i === 0, isLast = i === l.stops.length - 1;
+        const dotClass = s.terminus ? 'stn-dot terminus' : s.xfer.length ? 'stn-dot interchange' : 'stn-dot';
+        const nameClass = s.terminus ? 'stn-name terminus-name' : 'stn-name';
+        const xferHtml = s.xfer.length
+          ? `<div class="stn-xfer">${s.xfer.join(' ')}</div>`
+          : '';
+
+        stationsHtml += `<div class="stn">
+          <div class="${dotClass}" style="border-color:${l.color};${s.xfer.length ? `background:${l.color}` : ''}"></div>
+          <div class="${nameClass}">${s.name}</div>
+          ${xferHtml}
+        </div>`;
+
+        if (!isLast) {
+          stationsHtml += `<div class="stn-connector" style="background:${l.color}"></div>`;
+        }
+      });
+
+      card.innerHTML = `
+        <div class="lc-bar" style="background:${l.color}"></div>
+        <div class="lc-head">
+          <div class="lc-badge" style="background:${l.color}">${l.id}</div>
+          <div class="lc-route">${l.route}</div>
+          <div class="lc-type">${l.type}</div>
+        </div>
+        <div class="lc-stations">${stationsHtml}</div>`;
+
+      cont.appendChild(card);
+    });
+  });
+}
+
+function filt(f, btn) {
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+
+  document.querySelectorAll('.line-card').forEach(c => {
+    c.classList.toggle('hidden', f !== 'ALL' && c.dataset.lid !== f);
+  });
+
+  // Section headings
+  document.querySelectorAll('.section-heading').forEach(h => {
+    const ids = h.dataset.group.split(' ');
+    const anyVis = f === 'ALL' || ids.includes(f);
+    h.style.display = anyVis ? '' : 'none';
+  });
+}
+
+buildFilters();
+buildContent();
+</script>
+</body>
+</html>
