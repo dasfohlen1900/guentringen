@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GÜN Stationsschilder</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0e14;--surface:#13181f;--card:#1a2030;
+  --border:#222a38;--text:#dde4f0;--dim:#5a6580;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  padding-bottom:60px;
+}
+
+/* ── HEADER ── */
+header{
+  padding:24px 28px 18px;
+  background:linear-gradient(160deg,#0d0f18,#12151e);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+}
+.logo{font-family:'Barlow',sans-serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:.5px;}
+.logo span{color:#ff0022;}
+.header-right{margin-left:auto;text-align:right;}
+.header-date{font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── CONTROLS ── */
+.controls{
+  max-width:900px;margin:0 auto;padding:24px 24px 0;
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.ctrl-group{display:flex;flex-direction:column;gap:6px;}
+.ctrl-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);}
+.ctrl-select, .ctrl-input{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);padding:10px 14px;border-radius:9px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  outline:none;transition:.15s;width:100%;
+  appearance:none;-webkit-appearance:none;
+}
+.ctrl-select:focus,.ctrl-input:focus{border-color:#405060;background:#1e2535;}
+
+.ctrl-row{display:flex;gap:12px;align-items:flex-end;max-width:900px;margin:12px auto 0;padding:0 24px;}
+.btn-gen{
+  padding:10px 22px;border-radius:9px;
+  background:#ff0022;border:none;color:#fff;
+  font-family:'Barlow',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.5px;cursor:pointer;transition:.15s;
+  white-space:nowrap;
+}
+.btn-gen:hover{background:#e0001e;transform:translateY(-1px);}
+
+.btn-dl{
+  padding:10px 18px;border-radius:9px;
+  background:transparent;border:1px solid var(--border);color:var(--dim);
+  font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.btn-dl:hover{color:var(--text);border-color:#405060;}
+
+/* ── LINE FILTER PILLS ── */
+.line-pills{
+  max-width:900px;margin:16px auto 0;padding:0 24px;
+  display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+}
+.pill-label{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-right:4px;}
+.pill{
+  padding:4px 11px;border-radius:20px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--dim);
+  font-size:10px;font-weight:800;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:.12s;
+  letter-spacing:.3px;
+}
+.pill:hover{color:var(--text);border-color:#405060;}
+.pill.active{color:#fff;border-color:var(--c,#fff);background:color-mix(in srgb,var(--c,#fff) 18%,transparent);}
+
+/* ── DIVIDER ── */
+.divider{
+  max-width:900px;margin:28px auto 0;padding:0 24px;
+  display:flex;align-items:center;gap:12px;
+}
+.div-title{font-family:'Barlow',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--dim);white-space:nowrap;}
+.div-line{flex:1;height:1px;background:var(--border);}
+
+/* ── SIGNS GRID ── */
+.signs-grid{
+  max-width:900px;margin:20px auto 0;padding:0 24px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+  gap:16px;
+}
+
+/* ── THE SIGN ── */
+.sign{
+  background:#000;
+  border-radius:6px;
+  overflow:hidden;
+  position:relative;
+  aspect-ratio:2.5/1;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding:16px 20px 16px 14px;
+  gap:2px;
+  border:2px solid #222;
+  cursor:pointer;
+  transition:transform .15s, border-color .15s;
+  user-select:none;
+}
+.sign:hover{transform:scale(1.01);border-color:#444;}
+
+/* colour bar at left edge */
+.sign-bar{
+  position:absolute;left:0;top:0;bottom:0;width:8px;
+}
+
+.sign-inner{
+  padding-left:10px;
+  width:100%;
+}
+
+.sign-welcome{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;
+  color:#fff;letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.8;
+  margin-bottom:1px;
+}
+
+.sign-row{
+  display:flex;align-items:center;gap:10px;
+}
+
+.sign-emoji{
+  font-size:clamp(24px,4vw,38px);
+  line-height:1;
+  flex-shrink:0;
+}
+
+.sign-name{
+  font-family:'Barlow',sans-serif;
+  font-size:clamp(18px,3.2vw,32px);
+  font-weight:900;
+  color:#fff;
+  line-height:1.05;
+  letter-spacing:-.3px;
+}
+
+/* italic "Güntringen" prefix style like in the image */
+.sign-name .prefix{
+  font-style:italic;
+  font-weight:700;
+  opacity:.85;
+}
+
+.sign-platform{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(10px,1.5vw,13px);
+  font-weight:800;
+  color:#fff;
+  letter-spacing:1px;
+  margin-top:4px;
+  opacity:.9;
+}
+
+/* line badge in corner */
+.sign-badge{
+  position:absolute;right:12px;bottom:10px;
+  font-family:'Barlow',sans-serif;font-size:10px;font-weight:900;
+  color:#fff;padding:3px 8px;border-radius:5px;
+  letter-spacing:.5px;
+  opacity:.9;
+}
+
+/* ── EMPTY STATE ── */
+.empty{
+  text-align:center;padding:60px 24px;color:var(--dim);
+  font-size:13px;
+  grid-column:1/-1;
+}
+
+/* ── SECTION HEADING ── */
+.section-head{
+  max-width:900px;margin:28px auto 0;padding:0 24px;
+  display:flex;align-items:center;gap:12px;
+}
+.sh-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sh-title{font-family:'Barlow',sans-serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--dim);}
+.sh-line{flex:1;height:1px;background:var(--border);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GÜN<span>.</span></div>
+  <div>
+    <div class="header-date">Güntringer Verkehrsbetriebe · Stationsbeschilderung</div>
+    <div class="header-title">Schildgenerator</div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="ctrl-label">Stationsname</div>
+    <input class="ctrl-input" id="inp-name" type="text" placeholder="z.B. Altgün Dreieck" value="">
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">Bahnsteig / Gleis</div>
+    <input class="ctrl-input" id="inp-platform" type="text" placeholder="z.B. Bahnsteig 4+5" value="">
+  </div>
+</div>
+
+<div class="ctrl-row">
+  <div class="ctrl-group" style="flex:1">
+    <div class="ctrl-label">Linie (Manager)</div>
+    <select class="ctrl-select" id="sel-line">
+      <option value="">— Linie wählen —</option>
+    </select>
+  </div>
+  <button class="btn-gen" onclick="addSign()">+ Schild hinzufügen</button>
+</div>
+
+<div class="line-pills" id="pills-bar">
+  <span class="pill-label">Schnellfilter:</span>
+</div>
+
+<div id="output"></div>
+
+<script>
+/* ── DATEN (alte Originalfarben) ── */
+const LINES = [
+  // Hochbahn
+  {id:'L14', color:'#024d97', group:'Hochbahn',  emoji:'🚇'},
+  {id:'L15', color:'#8b4513', group:'Hochbahn',  emoji:'🚇'},
+  {id:'L16', color:'#27ae60', group:'Hochbahn',  emoji:'🚇'},
+  {id:'L17', color:'#5f27cd', group:'Hochbahn',  emoji:'🚇'},
+  // S-Bahn
+  {id:'S11',  color:'#ff0022', group:'S-Bahn', emoji:'🚆'},
+  {id:'S12',  color:'#4a90d9', group:'S-Bahn', emoji:'🚆'},
+  {id:'S20',  color:'#00b894', group:'S-Bahn', emoji:'🚆'},
+  {id:'S20a', color:'#00b894', group:'S-Bahn', emoji:'🚆'},
+  {id:'S22',  color:'#8878d8', group:'S-Bahn', emoji:'🚆'},
+  {id:'S23',  color:'#5f27cd', group:'S-Bahn', emoji:'🚆'},
+  {id:'S24',  color:'#c0392b', group:'S-Bahn', emoji:'🚆'},
+];
+
+const GROUPS = [
+  {key:'Hochbahn', icon:'🚇', bg:'#012d5e22'},
+  {key:'S-Bahn',   icon:'🚆', bg:'#7b000022'},
+];
+
+/* ── AKTIVE SCHILDER ── */
+let signs = []; // {name, platform, lineId, id}
+let nextId = 1;
+let filterLine = null;
+
+/* ── LINIEN-SELECT BEFÜLLEN ── */
+function buildSelect() {
+  const sel = document.getElementById('sel-line');
+  GROUPS.forEach(grp => {
+    const og = document.createElement('optgroup');
+    og.label = grp.key;
+    LINES.filter(l => l.group === grp.key).forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = l.id;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+/* ── PILLS BEFÜLLEN ── */
+function buildPills() {
+  const bar = document.getElementById('pills-bar');
+  const allPill = document.createElement('button');
+  allPill.className = 'pill active';
+  allPill.textContent = 'Alle';
+  allPill.dataset.lid = '';
+  allPill.style.setProperty('--c','#fff');
+  allPill.onclick = () => setFilter(null, allPill);
+  bar.appendChild(allPill);
+
+  LINES.forEach(l => {
+    const p = document.createElement('button');
+    p.className = 'pill';
+    p.textContent = l.id;
+    p.dataset.lid = l.id;
+    p.style.setProperty('--c', l.color);
+    p.onclick = () => setFilter(l.id, p);
+    bar.appendChild(p);
+  });
+}
+
+function setFilter(lid, btn) {
+  filterLine = lid || null;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderOutput();
+}
+
+/* ── SCHILD HINZUFÜGEN ── */
+function addSign() {
+  const name     = document.getElementById('inp-name').value.trim();
+  const platform = document.getElementById('inp-platform').value.trim();
+  const lineId   = document.getElementById('sel-line').value;
+
+  if(!name || !lineId) {
+    document.getElementById('inp-name').style.borderColor = name ? '' : '#ff0022';
+    document.getElementById('sel-line').style.borderColor = lineId ? '' : '#ff0022';
+    setTimeout(() => {
+      document.getElementById('inp-name').style.borderColor = '';
+      document.getElementById('sel-line').style.borderColor = '';
+    }, 1200);
+    return;
+  }
+
+  signs.push({name, platform, lineId, id: nextId++});
+  renderOutput();
+}
+
+/* ── SCHILD ENTFERNEN ── */
+function removeSign(id) {
+  signs = signs.filter(s => s.id !== id);
+  renderOutput();
+}
+
+/* ── STATION NAME SPLITTEN: "Güntringen X" → italic prefix ── */
+function splitName(name) {
+  const prefixes = ['Güntringen','Altgün','Güntratal','Villotal','Gemberg','Muersen','Möhlen','Krakenku','Vierstein','Lukstal','Fleischberg','Sternberg'];
+  for (const pre of prefixes) {
+    if(name.startsWith(pre + ' ')) {
+      const rest = name.slice(pre.length);
+      return `<span class="prefix">${pre}</span>${rest}`;
+    }
+  }
+  return name;
+}
+
+/* ── RENDER ── */
+function renderOutput() {
+  const out = document.getElementById('output');
+  out.innerHTML = '';
+
+  const visible = filterLine ? signs.filter(s => s.lineId === filterLine) : signs;
+
+  if(visible.length === 0) {
+    GROUPS.forEach(grp => {
+      const linesInGroup = LINES.filter(l => l.group === grp.key);
+
+      const secHead = document.createElement('div');
+      secHead.className = 'section-head';
+      secHead.innerHTML = `
+        <div class="sh-icon" style="background:${grp.bg};border:1px solid rgba(255,255,255,.07)">${grp.icon}</div>
+        <div class="sh-title">${grp.key}</div>
+        <div class="sh-line"></div>`;
+      out.appendChild(secHead);
+
+      // Placeholder grid
+      const grid = document.createElement('div');
+      grid.className = 'signs-grid';
+      grid.innerHTML = `<div class="empty">Noch keine Schilder für ${grp.key} angelegt.<br>Oben Stationsname + Linie wählen und hinzufügen.</div>`;
+      out.appendChild(grid);
+    });
+    return;
+  }
+
+  GROUPS.forEach(grp => {
+    const inGroup = visible.filter(s => {
+      const l = LINES.find(x => x.id === s.lineId);
+      return l && l.group === grp.key;
+    });
+    if(inGroup.length === 0) return;
+
+    const secHead = document.createElement('div');
+    secHead.className = 'section-head';
+    secHead.innerHTML = `
+      <div class="sh-icon" style="background:${grp.bg};border:1px solid rgba(255,255,255,.07)">${grp.icon}</div>
+      <div class="sh-title">${grp.key}</div>
+      <div class="sh-line"></div>`;
+    out.appendChild(secHead);
+
+    const grid = document.createElement('div');
+    grid.className = 'signs-grid';
+
+    inGroup.forEach(s => {
+      const line = LINES.find(l => l.id === s.lineId);
+      if(!line) return;
+
+      const div = document.createElement('div');
+      div.className = 'sign';
+      div.title = 'Klick zum Entfernen';
+      div.onclick = () => { if(confirm(`Schild „${s.name}" entfernen?`)) removeSign(s.id); };
+
+      div.innerHTML = `
+        <div class="sign-bar" style="background:${line.color}"></div>
+        <div class="sign-inner">
+          <div class="sign-welcome">Herzlich Willkommen in</div>
+          <div class="sign-row">
+            <div class="sign-emoji">${line.emoji}</div>
+            <div class="sign-name">${splitName(s.name)}</div>
+          </div>
+          ${s.platform ? `<div class="sign-platform">${s.platform}</div>` : ''}
+        </div>
+        <div class="sign-badge" style="background:${line.color}">${line.id}</div>`;
+
+      grid.appendChild(div);
+    });
+
+    out.appendChild(grid);
+  });
+}
+
+/* ── ENTER-TASTE ── */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter') addSign();
+});
+
+/* ── INIT ── */
+buildSelect();
+buildPills();
+renderOutput();
+</script>
+</body>
+</html>

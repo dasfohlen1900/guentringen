@@ -117,6 +117,33 @@ header{
   width:13px;height:13px;border-width:2.5px;
   background:#fff;
 }
+/* Unidirektionaler Stop: Dreieck */
+.stn-dot.unidirectional{
+  width:0;height:0;
+  border-radius:0;
+  border:none;
+  background:transparent;
+  position:relative;z-index:2;
+  flex-shrink:0;
+}
+.stn-dot.unidirectional::before{
+  content:'';
+  display:block;
+  width:0;height:0;
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-bottom:11px solid var(--tri-color,#fff);
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+/* Richtungspfeil unter dem Dreieck */
+.stn-uni-note{
+  font-size:6.5px;font-weight:800;letter-spacing:.3px;
+  color:var(--dim);margin-top:3px;text-align:center;
+  max-width:72px;text-transform:uppercase;
+  font-family:'Barlow Condensed',sans-serif;
+}
 .stn-name{
   font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
   color:var(--text);letter-spacing:.3px;
@@ -159,7 +186,7 @@ header{
 ═══════════════════════════════════════════ */
 const LINES_ALL = [
   // Hochbahn
-  {id:'L14', color:'#024d97', type:'Hochbahn',
+  {id:'L14', color:'#004aad', type:'Hochbahn',
    route:'Falkenberg ↔ Sonnenstadt',
    stops:[
      {name:'Falkenberg',        terminus:true,  xfer:[]},
@@ -174,7 +201,7 @@ const LINES_ALL = [
      {name:'Technopolis',       terminus:false, xfer:['L17']},
      {name:'Sonnenstadt',       terminus:true,  xfer:[]},
    ]},
-  {id:'L15', color:'#8b4513', type:'Hochbahn',
+  {id:'L15', color:'#7a4900', type:'Hochbahn',
    route:'Westende ↔ Altgün Dreieck',
    stops:[
      {name:'Westende',            terminus:true,  xfer:[]},
@@ -189,7 +216,7 @@ const LINES_ALL = [
      {name:'Altgün Center',       terminus:false, xfer:[]},
      {name:'Altgün Dreieck',      terminus:true,  xfer:['RS251','S11','L14','L16','S24']},
    ]},
-  {id:'L16', color:'#27ae60', type:'Hochbahn',
+  {id:'L16', color:'#2e6417', type:'Hochbahn',
    route:'Altgün Dreieck ↔ Hügelbezirk Süd',
    stops:[
      {name:'Altgün Dreieck',    terminus:true,  xfer:['RS251','S11','L14','L15','S24']},
@@ -206,7 +233,7 @@ const LINES_ALL = [
      {name:'GÜN Airport Parkstraße/GÜN Airport Parkway',   terminus:true,  xfer:[]},
      {name:'GÜN Airport Hbf/GÜN Airport Central',   terminus:true,  xfer:['RS119']},
    ]},
-  {id:'L17', color:'#861d96', type:'Hochbahn',
+  {id:'L17', color:'#6b1fad', type:'Hochbahn',
    route:'Güntringen Hbf ↔ Oktratal',
    stops:[
      {name:'Güntringen Hbf',       terminus:true,  xfer:['RS251','S11','S12','S20a','RS119','S23']},
@@ -218,7 +245,7 @@ const LINES_ALL = [
      {name:'Oktratal',             terminus:true,  xfer:[]},
    ]},
   // S-Bahn
-  {id:'S11', color:'#ff0022', type:'S-Bahn',
+  {id:'S11', color:'#ff3131', type:'S-Bahn',
    route:'Villotal Hbf ↔ Lixen (Güntr.) Hbf',
    stops:[
      {name:'Villotal Hbf',        terminus:true,  xfer:['S12','S20','S20a']},
@@ -230,7 +257,7 @@ const LINES_ALL = [
      {name:'Güntratal Süd',       terminus:false, xfer:['RS87']},
      {name:'Lixen (Güntr.) Hbf',  terminus:true,  xfer:[]},
    ]},
-  {id:'S12', color:'#4a90d9', type:'S-Bahn',
+  {id:'S12', color:'#5170ff', type:'S-Bahn',
    route:'Güntringen Hbf ↔ Möhlen Nord',
    stops:[
      {name:'Güntringen Hbf',  terminus:true,  xfer:['RS251','S11','S20a','S23','S24','L17','RS119']},
@@ -243,7 +270,7 @@ const LINES_ALL = [
      {name:'Möhlen Hbf',      terminus:false, xfer:['S22']},
      {name:'Möhlen Nord',     terminus:true,  xfer:[]},
    ]},
-  {id:'S20', color:'#00b894', type:'S-Bahn',
+  {id:'S20', color:'#11676a', type:'S-Bahn',
    route:'Güntringen Hafen ↔ Gemberg Nord',
    stops:[
      {name:'Güntringen Hafen',  terminus:true,  xfer:['RS251','S20a']},
@@ -253,7 +280,7 @@ const LINES_ALL = [
      {name:'Gemberg',           terminus:false, xfer:['S12']},
      {name:'Gemberg Nord',      terminus:true,  xfer:[]},
    ]},
-  {id:'S20a', color:'#00b894', type:'S-Bahn',
+  {id:'S20a', color:'#11676a', type:'S-Bahn',
    route:'Güntringen Anleger ↔ Güntringen Hbf',
    stops:[
      {name:'Güntringen Anleger', terminus:true,  xfer:['RS251']},
@@ -264,17 +291,17 @@ const LINES_ALL = [
      {name:'Güntringen Nord',    terminus:false, xfer:['RS251','S11','S22','RS119']},
      {name:'Güntringen Hbf',     terminus:true,  xfer:['RS251','S11','S12','S23','S24','L17','RS119']},
    ]},
-  {id:'S22', color:'#8878d8', type:'S-Bahn',
-   route:'Sternberg ↔ Möhlen-Meckleckhausen',
+  {id:'S22', color:'#e2a9f1', type:'S-Bahn',
+   route:'Kühltal ↔ Möhlen-Meckleckhausen',
    stops:[
-     {name:'Sternberg',             terminus:true,  xfer:['S12']},
-     {name:'Kühltal',               terminus:false, xfer:['S12']},
-     {name:'Möhlen Hbf',            terminus:false, xfer:['S12']},
+     {name:'Kühltal',               terminus:true,  xfer:['OctoSpeed','S12']},
+     {name:'Sternberg',             terminus:false, xfer:['S12','RS01']},
      {name:'Sternberg-Neustadt',    terminus:false, xfer:[]},
      {name:'Neuhausen',             terminus:false, xfer:[]},
-     {name:'Möhlen-Meckleckhausen', terminus:true,  xfer:[]},
+     {name:'Möhlen Hbf',            terminus:false, xfer:['S12','RS01']},
+     {name:'Möhlen-Meckleckhausen', terminus:true,  xfer:['RS01']},
    ]},
-  {id:'S23', color:'#5f27cd', type:'S-Bahn',
+  {id:'S23', color:'#9440dd', type:'S-Bahn',
    route:'Güntringen Hbf ↔ Krakschlüssel',
    stops:[
      {name:'Güntringen Hbf', terminus:true,  xfer:['RS251','S11','S12','S20a','S24','L17','RS119']},
@@ -283,7 +310,7 @@ const LINES_ALL = [
      {name:'Falbergertal',   terminus:false, xfer:['S24']},
      {name:'Krakschlüssel',  terminus:true,  xfer:['RS251']},
    ]},
-  {id:'S24', color:'#c0392b', type:'S-Bahn',
+  {id:'S24', color:'#cc0000', type:'S-Bahn',
    route:'Altgün Dreieck ↔ Fleischberg Westhafen',
    stops:[
      {name:'Altgün Dreieck',        terminus:true,  xfer:['RS251','S11','L14','L15','L16']},
@@ -293,8 +320,59 @@ const LINES_ALL = [
      {name:'Fleischberg',           terminus:false, xfer:[]},
      {name:'Fleischberg Westhafen', terminus:true,  xfer:[]},
    ]},
+  {id:'S61', color:'#ff6600', type:'S-Bahn',
+   route:'Muersen Hbf ↔ Güntringen Süd',
+   stops:[
+     {name:'Muersen Hbf',               terminus:true,  xfer:['RS01']},
+     {name:'Muersen Süd',               terminus:false, xfer:['RS01']},
+     {name:'Muersen Messe',             terminus:false, xfer:['RS01']},
+     {name:'Muertal',                   terminus:false, xfer:[], note:'nur Richtung MUE'},
+     {name:'Flieberg',                  terminus:false, xfer:['RS01']},
+     {name:'Neuflöfingen',              terminus:false, xfer:[]},
+     {name:'Möhlen-Meckleckhausen',     terminus:false, xfer:['S22','RS01']},
+     {name:'Möhlen Nord',               terminus:false, xfer:['S12','RS01'], note:'nur Richtung GÜN'},
+     {name:'Möhlen Hbf',               terminus:false, xfer:['S12','S22','RS01']},
+     {name:'Sternberg',                 terminus:false, xfer:['S12','S22','RS01']},
+     {name:'Nüleríjo',                  terminus:false, xfer:[]},
+     {name:'Kühltal',                   terminus:false, xfer:['S12','S22']},
+     {name:'Airport West',              terminus:false, xfer:['L16']},
+     {name:'Güntringen Nord',           terminus:false, xfer:['S11','S20a','RS01','RS119']},
+     {name:'Güntringen Hbf',           terminus:false, xfer:['S11','S12','S20a','S23','S24','L17','RS01','RS119']},
+     {name:'Altgün Dreieck',           terminus:false, xfer:['S11','S24','L14','L15','L16','RS251']},
+     {name:'Güntringen Süd',           terminus:true,  xfer:['S11','S23','S24']},
+   ]},
   // RS
-  {id:'RS87', color:'#ff6b6b', type:'Regionalservice',
+  {id:'RS01', color:'#0097b2', type:'Regionalservice',
+   route:'Krakenku Ost ↔ Güntringen Hbf',
+   stops:[
+     {name:'Krakenku Ost',               terminus:true,  xfer:[]},
+     {name:'Krakenku Soßol',             terminus:false, xfer:[]},
+     {name:'Krakenku Hbf',               terminus:false, xfer:[]},
+     {name:'Krakenku Süd',               terminus:false, xfer:[]},
+     {name:'Krakenku Wuffburg',          terminus:false, xfer:[]},
+     {name:'Kraksbrulzen',               terminus:false, xfer:[]},
+     {name:'Schneuselln',                terminus:false, xfer:[]},
+     {name:'Westerballáe',               terminus:false, xfer:[]},
+     {name:'Krakstetten',                terminus:false, xfer:[]},
+     {name:'Vierstein-West',             terminus:false, xfer:[]},
+     {name:'Dülpen-Zentrum',             terminus:false, xfer:[]},
+     {name:'Vierstein Hbf',              terminus:false, xfer:[]},
+     {name:'Lukstal-Maihausen',          terminus:false, xfer:[]},
+     {name:'Lenatal',                    terminus:false, xfer:[]},
+     {name:'Muersen Hbf',                terminus:false, xfer:[]},
+     {name:'Muersen Süd',                terminus:false, xfer:[]},
+     {name:'Muersen Messe',              terminus:false, xfer:[]},
+     {name:'Flieberg',                   terminus:false, xfer:[]},
+     {name:'Möhlen-Meckleckhausen',      terminus:false, xfer:['S22']},
+     {name:'Möhlen Nord',                terminus:false, xfer:['S12']},
+     {name:'Möhlen Hbf',                 terminus:false, xfer:['S12','S22']},
+     {name:'Sternberg',                  terminus:false, xfer:['S12','S22']},
+     {name:'Gemberg',                    terminus:false, xfer:['S12','S20']},
+     {name:'Villotal Hbf',               terminus:false, xfer:['S11','S12','S20']},
+     {name:'Güntringen Nord',            terminus:false, xfer:['S11','S20a','RS119']},
+     {name:'Güntringen Hbf',             terminus:true,  xfer:['S11','S12','S20a','S23','S24','L17','RS119']},
+   ]},
+  {id:'RS87', color:'#0097b2', type:'Regionalservice',
    route:'Güntratal Süd ↔ Landwart Hbf',
    stops:[
      {name:'Güntratal Süd', terminus:true,  xfer:['S11']},
@@ -303,7 +381,7 @@ const LINES_ALL = [
      {name:'Altbrulzen',    terminus:false, xfer:[]},
      {name:'Landwart Hbf',  terminus:true,  xfer:[]},
    ]},
-  {id:'RS119', color:'#e84393', type:'Regionalservice',
+  {id:'RS119', color:'#1800ad', type:'Regionalservice',
    route:'Güntringen Hbf ↔ Terminal 2',
    stops:[
      {name:'Güntringen Hbf',        terminus:true,  xfer:['RS251','S11','S12','S20a','S23','S24','L17']},
@@ -342,8 +420,8 @@ const LINES_ALL = [
 ═══════════════════════════════════════════ */
 const GROUPS = [
   { label:'🚄 Hochbahn',       icon:'🚄', iconBg:'#012d5e22', ids:['L14','L15','L16','L17'] },
-  { label:'🚆 S-Bahn',         icon:'🚆', iconBg:'#7b000022', ids:['S11','S12','S20','S20a','S22','S23','S24'] },
-  { label:'🚅 Regionalservice', icon:'🚅', iconBg:'#e8439322', ids:['RS87','RS119','RS251'] },
+  { label:'🚆 S-Bahn',         icon:'🚆', iconBg:'#7b000022', ids:['S11','S12','S20','S20a','S22','S23','S24','S61'] },
+  { label:'🚅 Regionalservice', icon:'🚅', iconBg:'#e8439322', ids:['RS01','RS87','RS119','RS251'] },
   { label:'🚅 Sonderverbindung', icon:'🚅', iconBg:'#e8439322', ids:['FCGün'] },
 ];
 
@@ -386,16 +464,28 @@ function buildContent() {
       let stationsHtml = '';
       l.stops.forEach((s, i) => {
         const isFirst = i === 0, isLast = i === l.stops.length - 1;
-        const dotClass = s.terminus ? 'stn-dot terminus' : s.xfer.length ? 'stn-dot interchange' : 'stn-dot';
+        const isUni = !!s.note;
+
+        let dotHtml;
+        if (isUni) {
+          dotHtml = `<div class="stn-dot unidirectional" style="--tri-color:${l.color}"></div>`;
+        } else {
+          const dotClass = s.terminus ? 'stn-dot terminus' : s.xfer.length ? 'stn-dot interchange' : 'stn-dot';
+          dotHtml = `<div class="${dotClass}" style="border-color:${l.color};${s.xfer.length && !s.terminus ? `background:${l.color}` : ''}"></div>`;
+        }
+
         const nameClass = s.terminus ? 'stn-name terminus-name' : 'stn-name';
         const xferHtml = s.xfer.length
           ? `<div class="stn-xfer">${s.xfer.join(' ')}</div>`
           : '';
+        const uniHtml = isUni
+          ? `<div class="stn-uni-note">${s.note}</div>`
+          : '';
 
         stationsHtml += `<div class="stn">
-          <div class="${dotClass}" style="border-color:${l.color};${s.xfer.length ? `background:${l.color}` : ''}"></div>
+          ${dotHtml}
           <div class="${nameClass}">${s.name}</div>
-          ${xferHtml}
+          ${xferHtml}${uniHtml}
         </div>`;
 
         if (!isLast) {

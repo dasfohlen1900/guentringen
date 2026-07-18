@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GÜN – Automaten Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #111318;
+  font-family: 'Barlow', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 60px;
+  gap: 48px;
+}
+
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #3a3f4e;
+  align-self: flex-start;
+  padding-left: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 80px;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════
+   TICKET AUTOMAT
+══════════════════════════════ */
+.ticket-machine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,.7));
+}
+
+.tm-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #3a3f4e;
+  margin-bottom: 16px;
+}
+
+/* Main body */
+.tm-body {
+  width: 260px;
+  background: linear-gradient(170deg, #1e2130 0%, #161820 100%);
+  border-radius: 14px 14px 4px 4px;
+  border: 1px solid #2a2d3a;
+  border-bottom: none;
+  padding: 0 0 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle brushed metal texture */
+.tm-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,.012) 3px,
+    rgba(255,255,255,.012) 4px
+  );
+  pointer-events: none;
+}
+
+/* Top GÜN banner */
+.tm-banner {
+  background: #000;
+  padding: 10px 16px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #0097b2;
+}
+.tm-banner-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tm-banner-logo {
+  font-size: 22px;
+  line-height: 1;
+}
+.tm-banner-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: .04em;
+}
+.tm-banner-name span { color: #0097b2; }
+.tm-banner-sub {
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #3a3f4e;
+}
+
+/* Screen */
+.tm-screen-wrap {
+  padding: 14px 14px 10px;
+}
+.tm-screen {
+  background: #0a1a14;
+  border-radius: 6px;
+  border: 2px solid #0d2a1f;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.6), 0 0 0 1px #000;
+}
+/* Screen scanlines */
+.tm-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.15) 2px,
+    rgba(0,0,0,.15) 3px
+  );
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+.tm-screen-header {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #0097b2;
+  margin-bottom: 8px;
+  opacity: .8;
+}
+
+.tm-screen-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #e8f5e0;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.tm-options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.tm-option {
+  background: rgba(0,151,178,.12);
+  border: 1px solid rgba(0,151,178,.25);
+  border-radius: 4px;
+  padding: 6px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all .12s;
+}
+.tm-option.active {
+  background: rgba(0,151,178,.25);
+  border-color: #0097b2;
+}
+.tm-option-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #cde8f5;
+  letter-spacing: .02em;
+}
+.tm-option-price {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .78rem;
+  font-weight: 900;
+  color: #0097b2;
+}
+
+.tm-screen-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.tm-btn-green {
+  background: #1a6b34;
+  border: 1px solid #2a9b4e;
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #7effa8;
+  cursor: pointer;
+}
+
+/* Keypad area */
+.tm-keypad-area {
+  padding: 8px 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Tarifgruppe selector */
+.tm-tarif-label {
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #3a3f4e;
+  margin-bottom: 3px;
+}
+.tm-tarif-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.tm-tarif-pill {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .6rem;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  opacity: .6;
+  transition: opacity .12s;
+}
+.tm-tarif-pill.active { opacity: 1; box-shadow: 0 0 6px rgba(255,255,255,.2); }
+
+/* Numpad */
+.tm-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.nm-key {
+  background: #22253a;
+  border: 1px solid #2e3248;
+  border-radius: 5px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  color: #8891a8;
+  cursor: pointer;
+  transition: all .08s;
+}
+.nm-key:active { background: #2e3350; color: #fff; }
+.nm-key.green { background: #0d2a1a; border-color: #1a5a32; color: #3d9962; }
+.nm-key.red   { background: #2a0d0d; border-color: #5a1a1a; color: #994040; }
+
+/* Card reader */
+.tm-card-slot-area {
+  padding: 6px 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tm-card-slot {
+  flex: 1;
+  height: 8px;
+  background: #0a0b10;
+  border: 1px solid #2a2d3a;
+  border-radius: 2px;
+  position: relative;
+}
+.tm-card-slot-label {
+  font-size: .52rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #2a2f3e;
+}
+.tm-contactless {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #0097b2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0097b2;
+  font-size: 11px;
+  opacity: .6;
+}
+
+/* Ticket output */
+.tm-ticket-slot {
+  margin: 10px 14px 0;
+  height: 10px;
+  background: linear-gradient(90deg, #0a0b10, #12141c, #0a0b10);
+  border: 1px solid #1e2130;
+  border-radius: 2px;
+  position: relative;
+}
+.tm-ticket-slot::before {
+  content: 'TICKET';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .36rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: #2a2f3e;
+}
+
+/* Coin + cash slots */
+.tm-cash-area {
+  margin: 8px 14px 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tm-coin-slot {
+  width: 20px;
+  height: 6px;
+  background: #0a0b10;
+  border: 1px solid #2a2d3a;
+  border-radius: 10px;
+}
+.tm-bill-slot {
+  flex: 1;
+  height: 18px;
+  background: #0a0b10;
+  border: 1px solid #2a2d3a;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .42rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: #2a2f3e;
+}
+
+/* Base plinth */
+.tm-plinth {
+  width: 280px;
+  height: 12px;
+  background: linear-gradient(180deg, #1a1d2a 0%, #0f1018 100%);
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #2a2d3a;
+  border-top: none;
+}
+.tm-stand {
+  width: 60px;
+  height: 200px;
+  background: linear-gradient(90deg, #141620 0%, #1c1f2e 40%, #141620 100%);
+  border-radius: 0 0 8px 8px;
+  border: 1px solid #22253a;
+  border-top: none;
+}
+.tm-base {
+  width: 120px;
+  height: 14px;
+  background: linear-gradient(180deg, #1c1f2e 0%, #0e1018 100%);
+  border-radius: 4px;
+  border: 1px solid #22253a;
+}
+
+
+/* ══════════════════════════════
+   VALIDIERUNGSSÄULE
+══════════════════════════════ */
+.scanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,.7));
+}
+
+.sc-head {
+  width: 140px;
+  background: linear-gradient(160deg, #1e2130 0%, #161820 100%);
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #2a2d3a;
+  border-bottom: none;
+  padding: 0 0 14px;
+  position: relative;
+  overflow: hidden;
+}
+.sc-head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg, transparent, transparent 3px,
+    rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px
+  );
+  pointer-events: none;
+}
+
+/* Top strip */
+.sc-banner {
+  background: #000;
+  padding: 7px 10px 6px;
+  border-bottom: 2px solid #0097b2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.sc-banner-oct { font-size: 14px; }
+.sc-banner-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: .04em;
+}
+.sc-banner-text span { color: #0097b2; }
+
+/* Status ring */
+.sc-status-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.sc-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid #0097b2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: radial-gradient(circle, rgba(0,151,178,.1) 0%, transparent 70%);
+  box-shadow: 0 0 16px rgba(0,151,178,.25), inset 0 0 12px rgba(0,151,178,.1);
+}
+/* Pulsing animation */
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(0,151,178,.5), inset 0 0 12px rgba(0,151,178,.1); }
+  70%  { box-shadow: 0 0 0 10px rgba(0,151,178,0), inset 0 0 12px rgba(0,151,178,.1); }
+  100% { box-shadow: 0 0 0 0 rgba(0,151,178,0), inset 0 0 12px rgba(0,151,178,.1); }
+}
+.sc-ring { animation: pulse-ring 2.4s ease-out infinite; }
+
+.sc-ring-icon {
+  font-size: 28px;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* NFC wave lines */
+.sc-ring::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,151,178,.18);
+}
+
+.sc-status-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #0097b2;
+  text-align: center;
+}
+
+/* Mini display */
+.sc-display {
+  margin: 8px 10px 0;
+  background: #040c0a;
+  border: 1px solid #0d2a1f;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+.sc-display-line {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .55rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #1ea85c;
+  line-height: 1.5;
+}
+.sc-display-line.dim { color: #0d4024; }
+
+/* QR slot */
+.sc-qr-slot {
+  margin: 8px 10px 0;
+  height: 28px;
+  background: #0a0b10;
+  border: 1px solid #2a2d3a;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.sc-qr-icon {
+  width: 16px;
+  height: 16px;
+  opacity: .25;
+}
+.sc-qr-label {
+  font-size: .44rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #2a2f3e;
+}
+
+/* Barcode reader line */
+@keyframes scan-line {
+  0%   { top: 4px; opacity: .8; }
+  50%  { top: 20px; opacity: 1; }
+  100% { top: 4px; opacity: .8; }
+}
+.sc-qr-slot { position: relative; overflow: hidden; }
+.sc-scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: rgba(0, 151, 178, .6);
+  animation: scan-line 2s ease-in-out infinite;
+  box-shadow: 0 0 4px rgba(0,151,178,.8);
+}
+
+/* Column neck */
+.sc-neck {
+  width: 48px;
+  height: 28px;
+  background: linear-gradient(90deg, #0f1018 0%, #1c1f2e 40%, #0f1018 100%);
+  border: 1px solid #22253a;
+  border-top: none;
+  border-bottom: none;
+}
+
+/* Pole */
+.sc-pole {
+  width: 28px;
+  height: 260px;
+  background: linear-gradient(90deg,
+    #0e1018 0%, #1c1f2e 20%, #252838 50%, #1c1f2e 80%, #0e1018 100%
+  );
+  border-radius: 2px;
+  border: 1px solid #22253a;
+  position: relative;
+}
+/* Pole detail rings */
+.sc-pole::before, .sc-pole::after {
+  content: '';
+  position: absolute;
+  left: -1px; right: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, #0e1018, #2a2d3a, #0e1018);
+  border-top: 1px solid #3a3f50;
+  border-bottom: 1px solid #1a1c28;
+}
+.sc-pole::before { top: 20px; }
+.sc-pole::after  { top: 40px; }
+
+/* Base plate */
+.sc-base-outer {
+  width: 90px;
+  height: 12px;
+  background: linear-gradient(180deg, #1c1f2e 0%, #0e1018 100%);
+  border-radius: 3px;
+  border: 1px solid #22253a;
+}
+.sc-base-inner {
+  width: 70px;
+  height: 8px;
+  background: linear-gradient(180deg, #141620 0%, #0a0b10 100%);
+  border-radius: 2px;
+  margin-top: -2px;
+  border: 1px solid #1a1c28;
+}
+
+/* ══════════════════════════════
+   FLOOR
+══════════════════════════════ */
+.floor {
+  width: 100%;
+  max-width: 700px;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, #1e2130 20%, #2a2d3a 50%, #1e2130 80%, transparent 100%
+  );
+  margin-top: 0px;
+}
+
+/* ══════════════════════════════
+   LABELS
+══════════════════════════════ */
+.machine-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #2a2f3e;
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* ══════════════════════════════
+   TICKET PREVIEW (floating)
+══════════════════════════════ */
+.ticket-preview {
+  position: relative;
+  margin-top: -10px;
+}
+.ticket {
+  width: 200px;
+  background: #f5f0e8;
+  border-radius: 4px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  transform: rotate(-2deg);
+  position: relative;
+}
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  right: -6px;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, #111318 0, #111318 4px, transparent 4px, transparent 8px);
+  transform: translateY(-50%);
+}
+.ticket-stripe {
+  height: 6px;
+  background: #0097b2;
+  border-radius: 2px 2px 0 0;
+  margin: -10px -12px 8px;
+  border-radius: 4px 4px 0 0;
+}
+.ticket-line {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #1a1c28;
+  line-height: 1.6;
+}
+.ticket-line.big {
+  font-size: .88rem;
+  font-weight: 900;
+  color: #000;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+.ticket-line.price {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #0060a0;
+}
+.ticket-barcode {
+  margin-top: 8px;
+  display: flex;
+  gap: 1.5px;
+  height: 22px;
+  align-items: stretch;
+}
+.bc-bar {
+  background: #111;
+  border-radius: 0.5px;
+}
+
+/* legend */
+.legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #3a3f4e;
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+</style>
+</head>
+<body>
+
+<h1>🐙 GÜN — Automaten &amp; Scanner · Mockup</h1>
+
+<div class="row">
+
+  <!-- ═══ TICKET AUTOMAT ═══ -->
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="ticket-machine">
+      <div class="tm-label">Ticketautomat TA-3</div>
+
+      <div class="tm-body">
+        <!-- Banner -->
+        <div class="tm-banner">
+          <div class="tm-banner-brand">
+            <span class="tm-banner-logo">🐙</span>
+            <span class="tm-banner-name">GÜN<span>·</span>Ticket</span>
+          </div>
+          <span class="tm-banner-sub">V$ · Villo</span>
+        </div>
+
+        <!-- Screen -->
+        <div class="tm-screen-wrap">
+          <div class="tm-screen">
+            <div class="tm-screen-header">▶ Tarifgruppe wählen</div>
+            <div class="tm-screen-title">Einzelticket<br>Hochbahn L14–L17</div>
+            <div class="tm-options">
+              <div class="tm-option active">
+                <span class="tm-option-name">Einzelticket</span>
+                <span class="tm-option-price">2,80 V$</span>
+              </div>
+              <div class="tm-option">
+                <span class="tm-option-name">Kurzstrecke (max. 3)</span>
+                <span class="tm-option-price">1,50 V$</span>
+              </div>
+              <div class="tm-option">
+                <span class="tm-option-name">Tageskarte</span>
+                <span class="tm-option-price">6,40 V$</span>
+              </div>
+              <div class="tm-option">
+                <span class="tm-option-name">Hin- &amp; Rück (Spezial)</span>
+                <span class="tm-option-price">5,00 V$</span>
+              </div>
+              <div class="tm-option">
+                <span class="tm-option-name">Monatskarte</span>
+                <span class="tm-option-price">56,00 V$</span>
+              </div>
+            </div>
+            <div class="tm-screen-footer">
+              <button class="tm-btn-green">WEITER ▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarifgruppe pills -->
+        <div class="tm-keypad-area">
+          <div class="tm-tarif-label">Tarifgruppe</div>
+          <div class="tm-tarif-pills">
+            <span class="tm-tarif-pill" style="background:#004aad">L14–16</span>
+            <span class="tm-tarif-pill active" style="background:#6b1fad">L14–17</span>
+            <span class="tm-tarif-pill" style="background:#11676a">S-Basis</span>
+            <span class="tm-tarif-pill" style="background:#ff3131">S11</span>
+            <span class="tm-tarif-pill" style="background:#5170ff">S12</span>
+            <span class="tm-tarif-pill" style="background:#9440dd">S20–24</span>
+            <span class="tm-tarif-pill" style="background:#0097b2">S-Flat</span>
+            <span class="tm-tarif-pill" style="background:#222;border:1px solid #444">GünCard</span>
+          </div>
+
+          <!-- Numpad -->
+          <div style="margin-top:6px;">
+            <div class="tm-tarif-label" style="margin-bottom:4px;">Eingabe</div>
+            <div class="tm-numpad">
+              <div class="nm-key">1</div><div class="nm-key">2</div><div class="nm-key">3</div>
+              <div class="nm-key">4</div><div class="nm-key">5</div><div class="nm-key">6</div>
+              <div class="nm-key">7</div><div class="nm-key">8</div><div class="nm-key">9</div>
+              <div class="nm-key red">✕</div><div class="nm-key">0</div><div class="nm-key green">✔</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contactless + card -->
+        <div class="tm-card-slot-area" style="margin-top:8px;">
+          <div class="tm-contactless">≋</div>
+          <div style="flex:1;">
+            <div class="tm-tarif-label">Kartenzahlung</div>
+            <div class="tm-card-slot"></div>
+          </div>
+        </div>
+
+        <!-- Ticket output -->
+        <div class="tm-ticket-slot"></div>
+
+        <!-- Cash -->
+        <div class="tm-cash-area">
+          <div class="tm-coin-slot"></div>
+          <div class="tm-bill-slot">SCHEINE &nbsp;↓</div>
+        </div>
+      </div>
+
+      <div class="tm-plinth"></div>
+      <div class="tm-stand"></div>
+      <div class="tm-base"></div>
+    </div>
+
+    <!-- Ticket floating out -->
+    <div class="ticket-preview" style="margin-top:-180px; margin-left:150px; z-index:10; position:relative;">
+      <div class="ticket">
+        <div class="ticket-stripe"></div>
+        <div class="ticket-line">GÜN GÜNTRINGEN NETZ · TA-3</div>
+        <div class="ticket-line big">Einzelticket</div>
+        <div class="ticket-line">Tarifgr. 14–17 · Hochbahn L14–L17</div>
+        <div class="ticket-line">Gültig ab Entwertung · 1 Fahrt</div>
+        <div class="ticket-line price">2,80 V$</div>
+        <div class="ticket-line" style="margin-top:4px;font-size:.48rem;color:#888;">
+          05.06.2010 · 14:32 · #GN-8841-T2
+        </div>
+        <div class="ticket-barcode" id="barcode"></div>
+      </div>
+    </div>
+
+    <div class="machine-label">Ticketautomat · Hochbahn + S-Bahn</div>
+  </div>
+
+
+  <!-- ═══ VALIDIERUNGSSÄULE ═══ -->
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="scanner">
+      <div class="tm-label">Validierungssäule VS-1</div>
+
+      <!-- Head unit -->
+      <div class="sc-head">
+        <div class="sc-banner">
+          <span class="sc-banner-oct">🐙</span>
+          <span class="sc-banner-text">CHECK<span>-IN</span></span>
+          <div style="width:8px;height:8px;border-radius:50%;background:#2eff7a;box-shadow:0 0 6px #2eff7a;"></div>
+        </div>
+
+        <div class="sc-status-wrap">
+          <div class="sc-ring">
+            <div class="sc-ring-icon">📶</div>
+          </div>
+          <div class="sc-status-text">Ticket scannen</div>
+        </div>
+
+        <!-- Mini display -->
+        <div class="sc-display">
+          <div class="sc-display-line">SYSTEM: BEREIT</div>
+          <div class="sc-display-line">DATUM: 05.06.2010</div>
+          <div class="sc-display-line">ZONE: GÜN-INNEN</div>
+          <div class="sc-display-line dim">LETZTE: ✔ 14:28</div>
+        </div>
+
+        <!-- QR/Barcode reader -->
+        <div class="sc-qr-slot">
+          <svg class="sc-qr-icon" viewBox="0 0 16 16" fill="#0097b2">
+            <rect x="0" y="0" width="6" height="6" rx="1"/>
+            <rect x="10" y="0" width="6" height="6" rx="1"/>
+            <rect x="0" y="10" width="6" height="6" rx="1"/>
+            <rect x="2" y="2" width="2" height="2" fill="#0a0b10"/>
+            <rect x="12" y="2" width="2" height="2" fill="#0a0b10"/>
+            <rect x="2" y="12" width="2" height="2" fill="#0a0b10"/>
+            <rect x="9" y="9" width="7" height="1.5"/>
+            <rect x="9" y="12" width="4" height="1.5"/>
+            <rect x="13" y="10.5" width="1.5" height="4"/>
+          </svg>
+          <span class="sc-qr-label">QR / Barcode</span>
+          <div class="sc-scan-beam"></div>
+        </div>
+      </div>
+
+      <!-- Neck -->
+      <div class="sc-neck"></div>
+
+      <!-- Pole -->
+      <div class="sc-pole"></div>
+
+      <!-- Base -->
+      <div class="sc-base-outer"></div>
+      <div class="sc-base-inner"></div>
+    </div>
+
+    <div class="machine-label">Validierungssäule · Offene Stationen</div>
+  </div>
+
+</div>
+
+<div class="floor"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#0097b2"></div>NFC / Kontaktlos</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2eff7a"></div>System bereit</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff3131"></div>Gate gesperrt</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f5f0e8"></div>Ticket (Thermopapier)</div>
+</div>
+
+<script>
+// Generate random barcode bars
+const bc = document.getElementById('barcode');
+const pattern = [3,1,2,1,3,2,1,1,3,1,2,3,1,1,2,1,3,2,1,3,1,2,1,1,3,2,1,1];
+pattern.forEach((w,i) => {
+  const bar = document.createElement('div');
+  bar.className = 'bc-bar';
+  bar.style.width = (w * 1.8) + 'px';
+  bar.style.background = i % 2 === 0 ? '#111' : 'transparent';
+  bc.appendChild(bar);
+});
+</script>
+</body>
+</html>

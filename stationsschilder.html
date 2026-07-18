@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GÜN – Stationsschilder</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #e8eaf0;
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 20px 28px 14px;
+    border-bottom: 1px solid #1e2028;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 800; letter-spacing:.04em; text-transform:uppercase; color:#fff; }
+  header span { color:#5a5f6e; font-size:.82rem; }
+
+  .controls {
+    padding: 12px 28px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid #1e2028;
+    background: #0d0e12;
+  }
+  .clabel {
+    font-size:.7rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.08em; color:#4a4f5e; white-space:nowrap; margin-right:2px;
+  }
+  .cgroup { display:flex; gap:5px; align-items:center; flex-wrap:wrap; }
+  .sep { width:1px; height:22px; background:#1e2028; margin:0 2px; }
+
+  .lbtn {
+    font-family:'Barlow',sans-serif; font-size:.76rem; font-weight:800;
+    padding:5px 11px; border-radius:4px; border:1px solid transparent;
+    cursor:pointer; background:#181a22; color:#5a5f6e;
+    transition:all .12s; text-transform:uppercase; letter-spacing:.04em;
+  }
+  .lbtn:hover { background:#21232e; color:#ccc; }
+  .lbtn.active { background:var(--c,#333); color:#fff; border-color:transparent; }
+  .lbtn.active.dk { color:#111; }
+
+  select, input[type="text"] {
+    font-family:'Barlow',sans-serif; font-size:.82rem; font-weight:600;
+    background:#181a22; color:#fff; border:1px solid #1e2028;
+    border-radius:4px; padding:5px 9px; outline:none;
+  }
+
+  .canvas-wrap {
+    flex:1; display:flex; align-items:flex-start;
+    justify-content:center; padding:36px 28px; overflow:auto;
+  }
+
+  /* ── SIGN ── */
+  .sign {
+    background:#000;
+    display:inline-flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #000, 0 10px 50px rgba(0,0,0,.9);
+  }
+  .sign-body { display:flex; align-items:stretch; }
+  .sign-logo {
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:background .2s;
+    border-right: 1px solid #222;
+  }
+  .sign-text {
+    display:flex; flex-direction:column; justify-content:center; flex:1;
+  }
+  .sign-welcome { color:#fff; font-weight:700; }
+  .sign-name { color:#fff; font-weight:900; line-height:1.0; }
+  .sign-name em { font-style:italic; font-weight:900; }
+  .sign-name b  { font-style:normal; font-weight:900; }
+  .sign-plat { color:#fff; font-weight:700; }
+  .sign-lines { display:flex; gap:4px; flex-wrap:wrap; padding-top:6px; }
+  .pill {
+    font-family:'Barlow',sans-serif; font-weight:900;
+    border-radius:3px; color:#fff;
+    display:inline-flex; align-items:center; justify-content:center;
+    text-transform:uppercase; letter-spacing:.01em;
+  }
+  .pill.dk { color:#111; }
+
+  /* sizes */
+  .sign[data-sz="S"] { width:520px; }
+  .sign[data-sz="S"] .sign-logo { width:78px; min-height:96px; font-size:50px; }
+  .sign[data-sz="S"] .sign-text { padding:9px 15px; }
+  .sign[data-sz="S"] .sign-welcome { font-size:10.5px; margin-bottom:2px; }
+  .sign[data-sz="S"] .sign-name { font-size:34px; }
+  .sign[data-sz="S"] .sign-plat { font-size:12px; margin-top:3px; }
+  .sign[data-sz="S"] .pill { font-size:9.5px; padding:2px 6px; }
+
+  .sign[data-sz="M"] { width:740px; }
+  .sign[data-sz="M"] .sign-logo { width:108px; min-height:132px; font-size:70px; }
+  .sign[data-sz="M"] .sign-text { padding:13px 20px; }
+  .sign[data-sz="M"] .sign-welcome { font-size:14px; margin-bottom:3px; }
+  .sign[data-sz="M"] .sign-name { font-size:50px; }
+  .sign[data-sz="M"] .sign-plat { font-size:16px; margin-top:5px; }
+  .sign[data-sz="M"] .pill { font-size:12px; padding:2px 9px; }
+
+  .sign[data-sz="L"] { width:980px; }
+  .sign[data-sz="L"] .sign-logo { width:146px; min-height:176px; font-size:94px; }
+  .sign[data-sz="L"] .sign-text { padding:18px 28px; }
+  .sign[data-sz="L"] .sign-welcome { font-size:19px; margin-bottom:4px; }
+  .sign[data-sz="L"] .sign-name { font-size:68px; }
+  .sign[data-sz="L"] .sign-plat { font-size:22px; margin-top:6px; }
+  .sign[data-sz="L"] .pill { font-size:15px; padding:3px 12px; }
+
+  .batch { display:flex; flex-direction:column; gap:18px; align-items:center; }
+  .empty { color:#3a3f4e; font-size:.95rem; font-weight:700; text-align:center;
+           padding:60px; letter-spacing:.06em; text-transform:uppercase; }
+  .hint { text-align:center; color:#383d4a; font-size:.72rem; padding:10px 0 20px;
+          font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🐙 GÜN Stationsschilder</h1>
+  <span>S-Bahn · Hochbahn · Schildergenerator</span>
+</header>
+
+<div class="controls">
+  <div class="cgroup">
+    <span class="clabel">Linie</span>
+    <div id="line-btns" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+  </div>
+  <div class="sep"></div>
+  <div class="cgroup">
+    <span class="clabel">Station</span>
+    <select id="stn-sel"><option value="">— wählen —</option></select>
+  </div>
+  <div class="sep"></div>
+  <div class="cgroup">
+    <span class="clabel">Bahnsteig</span>
+    <input type="text" id="plat" placeholder="z. B. 6+7" style="width:140px">
+  </div>
+  <div class="sep"></div>
+  <div class="cgroup">
+    <span class="clabel">Größe</span>
+    <button class="lbtn" onclick="setSize('S')" id="sz-S">S</button>
+    <button class="lbtn active" onclick="setSize('M')" id="sz-M" style="--c:#333;color:#fff;">M</button>
+    <button class="lbtn" onclick="setSize('L')" id="sz-L">L</button>
+  </div>
+  <div class="sep"></div>
+  <div class="cgroup">
+    <span class="clabel">Ansicht</span>
+    <button class="lbtn" id="btn-single" onclick="setSingle()">Einzeln</button>
+    <button class="lbtn" id="btn-all" onclick="setAll()">Alle</button>
+  </div>
+</div>
+
+<div class="canvas-wrap" id="canvas"></div>
+<div class="hint">Rechtsklick → Bild speichern · Ctrl+P zum Drucken</div>
+
+<script>
+const LC = {
+  L14:{color:'#004aad'},L15:{color:'#7a4900'},L16:{color:'#2e6417'},L17:{color:'#6b1fad'},
+  S11:{color:'#ff3131'},S12:{color:'#5170ff'},S20:{color:'#11676a'},S20a:{color:'#11676a'},
+  S22:{color:'#e2a9f1'},S23:{color:'#9440dd'},S24:{color:'#cc0000'},
+  OctoSpeed:{color:'#401268'},RS01:{color:'#0097b2'},RS87:{color:'#0097b2'},RS119:{color:'#1800ad'},
+};
+
+// Manager types: 'LSB' | 'LSB_RS' | 'LSB_OS' | '<LineID>'
+const MANAGER = {
+  // LSB = schwarz
+  'Altgün Dreieck':'LSB','Altgüner Vorstadt':'LSB','Falbergertal':'LSB',
+  'Güntratal Süd':'LSB','Güntringen Hbf':'LSB','Güntringen Nord':'LSB',
+  'Güntringen Süd':'LSB','Krakschlüssel':'LSB','Lixen (Güntr.) Hbf':'LSB',
+  'Möhlen Hbf':'LSB','Oktratal':'LSB','Regierungsviertel':'LSB',
+  'Sternberg':'LSB','Technopolis':'LSB','Villotal Hbf':'LSB',
+  // LSB (RS) = geteilt Teal+Navy
+  'Altbrulzen':'LSB_RS','Güntringen Airport Hbf':'LSB_RS',
+  'Hausfallstadt':'LSB_RS','Landwart Hbf':'LSB_RS',
+  'Terminal 1':'LSB_RS','Terminal 2':'LSB_RS',
+  // LSB (OS) = OctoSpeed Lila
+  'Kühltal':'LSB_OS','Lixen Nord':'LSB_OS',
+  // Linien-verwaltet
+  'Altgün Center':'L15','Altgün Markt':'L15','Altgün Mitte':'L14',
+  'Altgün Ost':'L17','Burg':'L16','Falkenberg':'L14',
+  'Falkenberger Allee':'L15','Fleischberg':'S24','Fleischberg Westhafen':'S24',
+  'Gemberg':'S12','Gemberg Nord':'S20','Güntratal West':'S23',
+  'Güntringen Anleger':'S20','Güntringen GünPark':'L15','Güntringen Hafen':'S20',
+  'Hügelbezirk Süd':'L16','Krakingerallee':'L16','Lünberg':'S20',
+  'Möhlen Nord':'S12','Möhlen-Meckleckhausen':'S22','Neuer Ring':'L14',
+  'Neuhausen':'S22','Neusüd':'L14','Norderschlüssel':'S20',
+  'Oktratal Ortseingang':'L17','Ostrich':'L16','Osttal':'L16',
+  'Sâscha-Okto-Ring':'L15','Seenring':'L14','Sonnenstadt':'L14',
+  'Sonnenwald':'L14','Sternberg-Neustadt':'S22','Südstern':'L17',
+  'Südtor':'L17','Vélicherring':'L16','Villenviertel':'L16',
+  'Villotal Süd':'S11','Vûlfja-Hüpel-Allee':'L15','Westende':'L15',
+  'ZOB Flussbezirk':'L15',
+};
+
+const ROUTES = [
+  {id:'L14',stops:[
+    {n:'Falkenberg',x:[]},{n:'Neuer Ring',x:[]},{n:'Regierungsviertel',x:['L15']},
+    {n:'Altgüner Vorstadt',x:['L15']},{n:'Altgün Mitte',x:[]},
+    {n:'Altgün Dreieck',x:['S11','L15','L16','S24']},{n:'Neusüd',x:[]},
+    {n:'Seenring',x:[]},{n:'Sonnenwald',x:[]},{n:'Technopolis',x:['L17']},
+    {n:'Sonnenstadt',x:[]},
+  ]},
+  {id:'L15',stops:[
+    {n:'Westende',x:[]},{n:'Güntringen GünPark',x:[]},{n:'ZOB Flussbezirk',x:[]},
+    {n:'Falkenberger Allee',x:[]},{n:'Regierungsviertel',x:['L14']},
+    {n:'Altgüner Vorstadt',x:['L14']},{n:'Sâscha-Okto-Ring',x:[]},
+    {n:'Vûlfja-Hüpel-Allee',x:[]},{n:'Altgün Markt',x:[]},{n:'Altgün Center',x:[]},
+    {n:'Altgün Dreieck',x:['S11','L14','L16','S24']},
+  ]},
+  {id:'L16',stops:[
+    {n:'Altgün Dreieck',x:['S11','L14','L15','S24']},{n:'Altgün Ost',x:['L17']},
+    {n:'Krakingerallee',x:[]},{n:'Burg',x:[]},{n:'Vélicherring',x:[]},
+    {n:'Osttal',x:[]},{n:'Villenviertel',x:[]},{n:'Ostrich',x:[]},
+    {n:'Hügelbezirk Süd',x:[]},
+  ]},
+  {id:'L17',stops:[
+    {n:'Güntringen Hbf',x:['S11','S12','S20a','RS119','S23']},
+    {n:'Altgün Ost',x:['L16']},{n:'Südstern',x:[]},{n:'Südtor',x:[]},
+    {n:'Technopolis',x:['L14']},{n:'Oktratal Ortseingang',x:[]},{n:'Oktratal',x:[]},
+  ]},
+  {id:'S11',stops:[
+    {n:'Villotal Hbf',x:['S12','S20','S20a']},{n:'Villotal Süd',x:['S12','S20a']},
+    {n:'Güntringen Nord',x:['S20a','RS119','S22']},
+    {n:'Güntringen Hbf',x:['S12','S20a','S23','S24','L17','RS119']},
+    {n:'Altgün Dreieck',x:['L14','L15','L16','S24']},
+    {n:'Güntringen Süd',x:['S23','S24']},{n:'Güntratal Süd',x:['RS87']},
+    {n:'Lixen (Güntr.) Hbf',x:[]},
+  ]},
+  {id:'S12',stops:[
+    {n:'Güntringen Hbf',x:['S11','S20a','S23','S24','L17','RS119']},
+    {n:'Villotal Süd',x:['S11','S20a']},{n:'Lünberg',x:['S20','S20a']},
+    {n:'Villotal Hbf',x:['S11','S20','S20a']},{n:'Gemberg',x:['S20']},
+    {n:'Sternberg',x:['S22']},{n:'Kühltal',x:['S22']},
+    {n:'Möhlen Hbf',x:['S22']},{n:'Möhlen Nord',x:[]},
+  ]},
+  {id:'S20',stops:[
+    {n:'Güntringen Hafen',x:['S20a']},{n:'Norderschlüssel',x:['S20a']},
+    {n:'Lünberg',x:['S12','S20a']},{n:'Villotal Hbf',x:['S11','S12','S20a']},
+    {n:'Gemberg',x:['S12']},{n:'Gemberg Nord',x:[]},
+  ]},
+  {id:'S20a',stops:[
+    {n:'Güntringen Anleger',x:[]},{n:'Güntringen Hafen',x:['S20']},
+    {n:'Norderschlüssel',x:['S20']},{n:'Lünberg',x:['S12','S20']},
+    {n:'Villotal Süd',x:['S11','S12']},{n:'Villotal Hbf',x:['S11','S12','S20']},
+    {n:'Güntringen Nord',x:['S11','S22','RS119']},
+    {n:'Güntringen Hbf',x:['S11','S12','S23','S24','L17','RS119']},
+  ]},
+  {id:'S22',stops:[
+    {n:'Sternberg',x:['S12']},{n:'Kühltal',x:['S12']},{n:'Möhlen Hbf',x:['S12']},
+    {n:'Sternberg-Neustadt',x:[]},{n:'Neuhausen',x:[]},
+    {n:'Möhlen-Meckleckhausen',x:[]},
+  ]},
+  {id:'S23',stops:[
+    {n:'Güntringen Hbf',x:['S11','S12','S20a','S24','L17','RS119']},
+    {n:'Güntringen Süd',x:['S11','S24']},{n:'Güntratal West',x:['S24']},
+    {n:'Falbergertal',x:['S24']},{n:'Krakschlüssel',x:[]},
+  ]},
+  {id:'S24',stops:[
+    {n:'Altgün Dreieck',x:['S11','L14','L15','L16']},
+    {n:'Güntringen Süd',x:['S11','S23']},{n:'Güntratal West',x:['S23']},
+    {n:'Falbergertal',x:['S23']},{n:'Fleischberg',x:[]},
+    {n:'Fleischberg Westhafen',x:[]},
+  ]},
+];
+
+let sel = null, stn = null, sz = 'M', all = false;
+
+/* init line buttons */
+document.querySelectorAll && (()=>{
+  const wrap = document.getElementById('line-btns');
+  ROUTES.forEach(r => {
+    const c = LC[r.id]?.color || '#333';
+    const btn = document.createElement('button');
+    btn.className = 'lbtn' + (r.id==='S22'?' dk':'');
+    btn.textContent = r.id;
+    btn.dataset.id = r.id;
+    btn.style.setProperty('--c', c);
+    btn.onclick = () => pickLine(r.id);
+    wrap.appendChild(btn);
+  });
+})();
+
+function pickLine(id) {
+  sel = id; stn = null; all = false;
+  document.querySelectorAll('#line-btns .lbtn').forEach(b => {
+    b.classList.toggle('active', b.dataset.id === id);
+  });
+  const route = ROUTES.find(r=>r.id===id);
+  const s = document.getElementById('stn-sel');
+  s.innerHTML = '<option value="">— wählen —</option>';
+  route.stops.forEach(st => {
+    const o = document.createElement('option');
+    o.value = st.n; o.textContent = st.n; s.appendChild(o);
+  });
+  s.onchange = () => { stn = s.value||null; all=false; render(); };
+  render();
+}
+
+function setSize(v) {
+  sz = v;
+  ['S','M','L'].forEach(x => {
+    const b = document.getElementById('sz-'+x);
+    b.classList.toggle('active', x===v);
+    if(x===v){ b.style.setProperty('--c','#333'); b.style.color='#fff'; }
+    else { b.style.removeProperty('--c'); b.style.color=''; }
+  });
+  render();
+}
+
+function setSingle(){ all=false; render(); }
+function setAll(){ all=true; render(); }
+
+document.getElementById('plat').addEventListener('input', render);
+
+// Returns {type:'solid'|'split', color?:string, left?:string, right?:string}
+function managerStyle(name) {
+  const m = MANAGER[name] || 'LSB';
+  if(m === 'LSB')    return {type:'solid', color:'#000000'};
+  if(m === 'LSB_RS') return {type:'split', left:'#0097b2', right:'#1800ad'};
+  if(m === 'LSB_OS') return {type:'solid', color:'#401268'};
+  return {type:'solid', color: LC[m]?.color || '#1800ad'};
+}
+
+function allLinesFor(name) {
+  const seen = new Set();
+  ROUTES.forEach(r => {
+    const st = r.stops.find(s=>s.n===name);
+    if(st){ seen.add(r.id); (st.x||[]).forEach(x=>seen.add(x)); }
+  });
+  return [...seen];
+}
+
+function formatName(name) {
+  if(name.startsWith('Güntringen')) {
+    const rest = name.slice('Güntringen'.length);
+    return `<em>Güntringen</em><b>${rest}</b>`;
+  }
+  return `<b>${name}</b>`;
+}
+
+function buildSign(name, plat) {
+  const ms = managerStyle(name);
+  const lines = allLinesFor(name);
+  const pillsHtml = lines.map(id => {
+    const c = LC[id]?.color||'#333';
+    const dark = id==='S22';
+    return `<span class="pill${dark?' dk':''}" style="background:${c}">${id}</span>`;
+  }).join('');
+
+  // Logo box HTML depending on manager type
+  let logoStyle, logoInner;
+  if(ms.type === 'split') {
+    logoStyle = 'position:relative;overflow:hidden;';
+    logoInner = `
+      <div style="position:absolute;inset:0;display:flex;">
+        <div style="flex:1;background:${ms.left}"></div>
+        <div style="flex:1;background:${ms.right}"></div>
+      </div>
+      <span style="position:relative;z-index:1;">🐙</span>
+    `;
+  } else {
+    logoStyle = `background:${ms.color};`;
+    logoInner = `🐙`;
+  }
+
+  const div = document.createElement('div');
+  div.className = 'sign';
+  div.dataset.sz = sz;
+  div.innerHTML = `
+    <div class="sign-body">
+      <div class="sign-logo" style="${logoStyle}">${logoInner}</div>
+      <div class="sign-text">
+        <div class="sign-welcome">Herzlich Willkommen in</div>
+        <div class="sign-name">${formatName(name)}</div>
+        ${plat?`<div class="sign-plat">Bahnsteig ${plat}</div>`:''}
+        ${lines.length?`<div class="sign-lines">${pillsHtml}</div>`:''}
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+function render() {
+  const wrap = document.getElementById('canvas');
+  const plat = document.getElementById('plat').value.trim();
+  wrap.innerHTML = '';
+
+  if(all && sel) {
+    const route = ROUTES.find(r=>r.id===sel);
+    if(!route) return;
+    const g = document.createElement('div');
+    g.className = 'batch';
+    route.stops.forEach(st => g.appendChild(buildSign(st.n, plat)));
+    wrap.appendChild(g);
+  } else if(stn) {
+    wrap.appendChild(buildSign(stn, plat));
+  } else {
+    wrap.innerHTML = `<div class="empty">${sel?'Station wählen ↑':'Linie wählen ↑'}</div>`;
+  }
+}
+</script>
+</body>
+</html>
